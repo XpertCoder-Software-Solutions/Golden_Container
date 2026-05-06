@@ -81,24 +81,24 @@ const contacts: ContactItem[] = [
 ]
 
 const styles = {
-  mutedText: 'text-[15px] leading-8 text-[#DEDEDE] sm:text-base',
+  mutedText: 'text-[13px] leading-7 text-[#DEDEDE] md:text-[15px] md:leading-8 lg:text-base',
   sectionHeader: 'space-y-4',
-  sectionTitle: 'text-base font-semibold sm:text-lg',
+  sectionTitle: 'text-[15px] font-semibold md:text-base lg:text-lg',
   sectionLine: 'block h-1 w-28 bg-gradient-to-l from-[#A96522] to-[#FBEF9D] sm:w-36',
   navList: 'mt-3 space-y-3 sm:mt-4 sm:space-y-4',
-  navLink: 'transition-colors duration-200 hover:text-[#d6ac57]',
+  navLink: 'text-[14px] transition-colors duration-200 hover:text-[#d6ac57] md:text-[15px] lg:text-base',
   socialList: 'mt-8 flex flex-wrap justify-center gap-4 pt-1 sm:mt-10 sm:justify-start sm:gap-5',
   socialLink:
-    'grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-[#A96522] to-[#FBEF9D] text-lg text-white transition-transform duration-200 hover:scale-110',
+    'grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#A96522] to-[#FBEF9D] text-[15px] text-white transition-transform duration-200 hover:scale-110 sm:h-10 sm:w-10 sm:text-lg',
   contactsGrid:
     'mt-8 grid w-full gap-x-6 gap-y-4 pt-6 md:mt-10 md:grid-cols-2 md:pt-7 xl:grid-cols-3',
-  contactItem: 'flex items-start gap-3 text-[#DEDEDE] sm:items-center sm:gap-4',
-  contactIcon: 'mt-0.5 grid h-6 w-6 shrink-0 place-items-center text-lg sm:mt-0',
+  contactItem: 'flex items-start gap-3 text-[13px] text-[#DEDEDE] md:text-[14px] lg:text-[15px] sm:items-center sm:gap-4',
+  contactIcon: 'mt-0.5 grid h-5 w-5 shrink-0 place-items-center text-base md:h-6 md:w-6 md:text-lg sm:mt-0',
   contactText: 'break-words leading-relaxed',
   contactInteractive:
     'break-words leading-relaxed transition-colors duration-200 hover:text-[#d6ac57]',
   bottomBar:
-    'mt-7 border-t border-[#4d4d4d] pt-7 text-center text-sm leading-7 text-[#DEDEDE] sm:text-base lg:text-right',
+    'mt-7 border-t border-[#4d4d4d] pt-7 text-center text-[12px] leading-6 text-[#DEDEDE] sm:text-sm md:text-[15px] md:leading-7 lg:text-right lg:text-base',
 } as const
 
 function SectionHeader({ title }: { title: string }) {
@@ -132,8 +132,8 @@ function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#07090D] py-10 sm:py-12 lg:py-14" dir="rtl">
-      <div className="mx-auto w-full max-w-[1240px]">
+    <footer className="bg-[#07090D] py-7 sm:py-12 lg:py-14" dir="rtl">
+      <div className="mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]">
         <svg className="h-0 w-0" aria-hidden="true" focusable="false">
           <defs>
             <linearGradient

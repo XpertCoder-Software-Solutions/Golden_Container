@@ -6,6 +6,7 @@ import {
   FaMapMarkerAlt,
   FaEnvelope,
   FaPhoneAlt,
+  FaPaperPlane,
 } from 'react-icons/fa'
 import type { IconType } from 'react-icons'
 import { useLanguage, type Language } from '../i18n/language'
@@ -27,7 +28,7 @@ type SocialItem = {
 type ContactFormField = {
   id: string
   name: string
-  type: 'text' | 'tel'
+  type: 'text' | 'tel' | 'email'
   placeholder: string
   autoComplete?: string
 }
@@ -42,14 +43,14 @@ const contactInfoByLanguage: Record<Language, ContactInfoItem[]> = {
     {
       id: 'email',
       icon: FaEnvelope,
-      label: 'info@goldencontainer.com',
-      href: 'mailto:info@goldencontainer.com',
+      label: 'info@goldencontainereg.com',
+      href: 'mailto:info@goldencontainereg.com',
     },
     {
       id: 'phone',
       icon: FaPhoneAlt,
-      label: '+20 1000000000',
-      href: 'tel:+201000000000',
+      label: '+20 1009631733',
+      href: 'tel:+201009631733',
     },
   ],
   ar: [
@@ -61,24 +62,24 @@ const contactInfoByLanguage: Record<Language, ContactInfoItem[]> = {
     {
       id: 'email',
       icon: FaEnvelope,
-      label: 'info@goldencontainer.com',
-      href: 'mailto:info@goldencontainer.com',
+      label: 'info@goldencontainereg.com',
+      href: 'mailto:info@goldencontainereg.com',
     },
     {
       id: 'phone',
       icon: FaPhoneAlt,
-      label: '+20 1000000000',
-      href: 'tel:+201000000000',
+      label: '+20 1009631733',
+      href: 'tel:+201009631733',
     },
   ],
 }
 
 const socialLinksByLanguage: Record<Language, SocialItem[]> = {
   en: [
-    { id: 'snapchat', icon: FaSnapchatGhost, label: 'Snapchat', href: '#' },
-    { id: 'twitter', icon: FaTwitter, label: 'Twitter', href: '#' },
-    { id: 'instagram', icon: FaInstagram, label: 'Instagram', href: '#' },
     { id: 'facebook', icon: FaFacebookF, label: 'Facebook', href: '#' },
+    { id: 'instagram', icon: FaInstagram, label: 'Instagram', href: '#' },
+    { id: 'twitter', icon: FaTwitter, label: 'Twitter', href: '#' },
+    { id: 'snapchat', icon: FaSnapchatGhost, label: 'Snapchat', href: '#' },
   ],
   ar: [
     { id: 'snapchat', icon: FaSnapchatGhost, label: 'سناب شات', href: '#' },
@@ -94,7 +95,7 @@ const contactFormFieldsByLanguage: Record<Language, ContactFormField[]> = {
       id: 'contact-name',
       name: 'name',
       type: 'text',
-      placeholder: 'Name',
+      placeholder: 'Full Name',
       autoComplete: 'name',
     },
     {
@@ -116,7 +117,7 @@ const contactFormFieldsByLanguage: Record<Language, ContactFormField[]> = {
       id: 'contact-name',
       name: 'name',
       type: 'text',
-      placeholder: 'الاسم',
+      placeholder: 'الاسم بالكامل',
       autoComplete: 'name',
     },
     {
@@ -135,64 +136,97 @@ const contactFormFieldsByLanguage: Record<Language, ContactFormField[]> = {
   ],
 }
 
-const sectionCopyByLanguage: Record<Language, {
-  title: string
-  contactDetailsTitle: string
-  followUs: string
-  message: string
-  submit: string
-  contactAriaLabel: string
-}> = {
+const sectionCopyByLanguage: Record<
+  Language,
+  {
+    title: string
+    subtitle: string
+    contactDetailsTitle: string
+    contactDetailsDescription: string
+    followUs: string
+    formTitle: string
+    formDescription: string
+    message: string
+    submit: string
+    supportLabel: string
+    contactAriaLabel: string
+  }
+> = {
   en: {
     title: 'Contact Us',
-    contactDetailsTitle: 'Contact Details',
+    subtitle: 'Ready for your next shipment? Let us build the right charcoal export plan for your market.',
+    contactDetailsTitle: 'Contact Information',
+    contactDetailsDescription:
+      'Reach our team directly for pricing, packaging options, and full export coordination.',
     followUs: 'Follow Us',
+    formTitle: 'Share Your Requirement',
+    formDescription: 'Leave your details and our sales team will prepare a custom quotation for your business.',
     message: 'Message',
     submit: 'Send Request Now',
+    supportLabel: 'Priority Support',
     contactAriaLabel: 'Contact information',
   },
   ar: {
     title: 'تواصل معنا',
-    contactDetailsTitle: 'بيانات التواصل',
+    subtitle: 'جاهز للشحنة القادمة؟ دعنا نجهز لك خطة التصدير المناسبة لسوقك.',
+    contactDetailsTitle: 'معلومات التواصل',
+    contactDetailsDescription:
+      'تواصل مباشرة مع فريقنا للحصول على الأسعار، خيارات التعبئة، وتنظيم كامل لعمليات التصدير.',
     followUs: 'تابعنا على',
+    formTitle: 'شاركنا طلبك',
+    formDescription: 'اترك بياناتك وسيقوم فريق المبيعات بإعداد عرض سعر مناسب لطبيعة نشاطك.',
     message: 'الرسالة',
     submit: 'إرسال الطلب الآن',
+    supportLabel: 'دعم أولوية',
     contactAriaLabel: 'معلومات التواصل',
   },
 }
 
-const goldGradientId = 'section6-gold-gradient'
 const goldGradientBackground = 'bg-gradient-to-l from-[#FBEF9D] to-[#A96522]'
-const goldHoverText =
-  'transition-colors duration-200 hover:bg-gradient-to-l hover:from-[#FBEF9D] hover:to-[#A96522] hover:bg-clip-text hover:text-transparent'
-
+const sectionTitleGradient = `${goldGradientBackground} bg-clip-text text-transparent`
 const fieldBaseStyles =
-  'h-[52px] w-full rounded-[8px] border border-[#EEEEEE] bg-transparent px-4 text-sm text-[#FFFFFF] placeholder:text-[#9F9F9F] focus:border-[#A96522] focus:outline-none sm:h-[56px] sm:px-6'
+  'h-[54px] w-full rounded-[14px] border border-white/15 bg-[#0A0D12] px-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] transition-all duration-200 focus:border-[#D8A45C] focus:ring-2 focus:ring-[#D8A45C]/20 focus:outline-none sm:h-[58px] sm:px-5'
 const messageBaseStyles =
-  'min-h-[180px] w-full rounded-[8px] border border-[#EEEEEE] bg-transparent px-4 py-4 text-sm text-[#FFFFFF] placeholder:text-[#9F9F9F] focus:border-[#A96522] focus:outline-none sm:min-h-[220px] sm:px-6'
-
-const isPhoneLink = (href: string) => href.startsWith('tel:')
+  'min-h-[180px] w-full rounded-[14px] border border-white/15 bg-[#0A0D12] px-4 py-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] transition-all duration-200 focus:border-[#D8A45C] focus:ring-2 focus:ring-[#D8A45C]/20 focus:outline-none sm:min-h-[220px] sm:px-5'
 
 const styles = {
-  section:
-    'bg-[#07090D] py-10 sm:py-12 md:py-14 lg:py-16',
-  container:
-    'mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]',
-  headingRow:
-    'mb-8 flex items-center justify-center gap-3 sm:mb-10 sm:gap-4 md:mb-12 md:gap-7',
-  divider:
-    `h-[3px] w-[58px] bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-[90px] md:w-[120px]`,
-  heading:
-    `bg-gradient-to-t from-[#FBEF9D] to-[#A96522] bg-clip-text text-transparent leading-[1.3] text-center text-3xl font-extrabold sm:text-4xl`,
-  shell: `rounded-[16px] ${goldGradientBackground} p-[1px]`,
-  shellInner: 'rounded-[15px] bg-[#07090D] p-4 sm:p-7 md:p-10 lg:p-12',
-  contactList: 'mt-6 space-y-4 sm:mt-8 sm:space-y-5',
-  socialBubble:
-    'grid h-[34px] w-[34px] place-items-center rounded-full bg-[#07090D] transition-colors duration-200 group-hover:bg-[#0D0D0D] sm:h-[38px] sm:w-[38px]',
-  form: 'w-full md:min-w-0 md:flex-1 md:max-w-[500px] lg:max-w-[665px]',
+  section: 'relative overflow-hidden bg-[#07090D] py-10 sm:py-12 md:py-14 lg:py-16',
+  container: 'mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]',
+  headingRow: 'relative z-10 mb-7 flex items-center justify-center gap-3 sm:mb-9 sm:gap-4 md:mb-10 md:gap-7',
+  divider: `h-[3px] w-[56px] ${goldGradientBackground} sm:w-[88px] md:w-[120px]`,
+  heading: `${sectionTitleGradient} text-center text-3xl font-extrabold leading-[1.15] sm:text-4xl`,
+  subtitle:
+    'relative z-10 mx-auto mb-8 max-w-[760px] text-center text-sm leading-7 text-[#D3DAE6] sm:mb-10 sm:text-[15px] md:mb-12 md:text-base',
+  contentGrid:
+    'relative grid grid-cols-1 gap-4 lg:grid-cols-[minmax(300px,0.88fr)_minmax(0,1.22fr)] lg:gap-5',
+  infoCard:
+    'rounded-[20px] border border-[#D4A25F]/35 bg-[linear-gradient(155deg,rgba(41,30,17,0.72),rgba(15,18,24,0.95)_55%,rgba(10,13,18,0.98))] p-6 sm:p-7',
+  infoLabel:
+    'inline-flex rounded-full border border-[#E3B36E]/55 bg-[#17140F] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#F0CE96]',
+  infoList: 'mt-6 space-y-3',
+  infoItem:
+    'group flex items-center gap-3 rounded-[12px] border border-white/10 bg-white/[0.03] px-3.5 py-3 text-sm text-[#F6F7FA] transition-all duration-200 hover:border-[#D8A45C]/70 hover:bg-white/[0.07] sm:px-4 sm:text-[15px]',
+  iconBubble:
+    `grid h-9 w-9 shrink-0 place-items-center rounded-full ${goldGradientBackground} text-[#0A0B0F] sm:h-10 sm:w-10`,
+  supportCard:
+    'mt-6 flex items-start gap-3 rounded-[14px] border border-[#E3B36E]/40 bg-[#121418]/80 px-4 py-3.5 sm:mt-7',
+  supportIcon:
+    `grid h-9 w-9 shrink-0 place-items-center rounded-full ${goldGradientBackground} text-[#0A0B0F]`,
+  socialRow: 'mt-5 flex flex-wrap items-center gap-3',
+  socialLink:
+    'grid h-10 w-10 place-items-center rounded-full border border-[#E0B377] bg-[#090C11] text-[#F1D089] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F4D8A2] hover:text-[#FFE5B5]',
+  formCard:
+    'rounded-[20px] border border-white/10 bg-[linear-gradient(160deg,rgba(16,20,27,0.95),rgba(9,12,17,0.99))] p-5 sm:p-6 md:p-7',
+  tagsRow: 'mt-4 flex flex-wrap gap-2.5',
+  tag:
+    'inline-flex items-center gap-1.5 rounded-full border border-[#C68A42] bg-[#14120F] px-3 py-1.5 text-xs font-medium text-[#F4D9A4]',
+  form: 'mt-6',
   submitButton:
-    `mt-6 inline-flex w-full items-center justify-center rounded-[8px] ${goldGradientBackground} px-8 py-3.5 font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5 sm:mt-8 sm:w-auto sm:py-4`,
+    `mt-6 inline-flex w-full items-center justify-center gap-2 rounded-[14px] ${goldGradientBackground} px-7 py-3.5 text-sm font-semibold text-[#FFFFFF] transition-transform duration-200 hover:-translate-y-0.5 sm:w-auto sm:text-base`,
+  responseRow: 'mt-4 flex items-center gap-2 text-sm text-[#D5DCEA]',
 } as const
+
+const isPhoneLink = (href: string) => href.startsWith('tel:')
 
 type ContactInfoListProps = {
   contactInfo: ContactInfoItem[]
@@ -200,24 +234,24 @@ type ContactInfoListProps = {
 
 function ContactInfoList({ contactInfo }: ContactInfoListProps) {
   return (
-    <ul className={styles.contactList}>
+    <ul className={styles.infoList}>
       {contactInfo.map(({ id, icon: Icon, label, href }) => (
-        <li
-          key={id}
-          className="flex items-center justify-center gap-3 text-sm text-[#FFFFFF] sm:gap-4 sm:text-base md:justify-start lg:text-lg"
-        >
-          <Icon className="shrink-0" style={{ fill: `url(#${goldGradientId})` }} />
+        <li key={id} className={styles.infoItem}>
+          <span className={styles.iconBubble}>
+            <Icon aria-hidden="true" />
+          </span>
+
           {href ? (
             <a
               href={href}
-              className={goldHoverText}
+              className="leading-relaxed text-[#F7F7FA] transition-colors duration-200 hover:text-[#F8DFAE]"
               dir={isPhoneLink(href) ? 'ltr' : undefined}
               style={isPhoneLink(href) ? { unicodeBidi: 'plaintext' } : undefined}
             >
               {label}
             </a>
           ) : (
-            <span>{label}</span>
+            <span className="leading-relaxed">{label}</span>
           )}
         </li>
       ))}
@@ -231,17 +265,10 @@ type SocialLinksListProps = {
 
 function SocialLinksList({ socialLinks }: SocialLinksListProps) {
   return (
-    <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:mt-6 sm:gap-4 md:mt-8 md:justify-start">
+    <div className={styles.socialRow}>
       {socialLinks.map(({ id, icon: Icon, label, href }) => (
-        <a
-          key={id}
-          href={href}
-          aria-label={label}
-          className={`group block rounded-full ${goldGradientBackground} p-[1px]`}
-        >
-          <span className={styles.socialBubble}>
-            <Icon style={{ fill: `url(#${goldGradientId})` }} />
-          </span>
+        <a key={id} href={href} aria-label={label} className={styles.socialLink}>
+          <Icon aria-hidden="true" />
         </a>
       ))}
     </div>
@@ -255,15 +282,20 @@ type ContactFormProps = {
   isArabic: boolean
 }
 
-function ContactForm({ contactFormFields, messageLabel, submitLabel, isArabic }: ContactFormProps) {
+function ContactForm({
+  contactFormFields,
+  messageLabel,
+  submitLabel,
+  isArabic,
+}: ContactFormProps) {
   const fieldStyles = `${fieldBaseStyles} ${isArabic ? 'text-right' : 'text-left'}`
   const messageStyles = `${messageBaseStyles} ${isArabic ? 'text-right' : 'text-left'}`
 
   return (
     <form className={styles.form} onSubmit={(event) => event.preventDefault()} noValidate>
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
         {contactFormFields.map(({ id, name, type, placeholder, autoComplete }) => (
-          <div key={id}>
+          <div key={id} className={name === 'subject' ? 'md:col-span-2' : ''}>
             <label htmlFor={id} className="sr-only">
               {placeholder}
             </label>
@@ -278,7 +310,7 @@ function ContactForm({ contactFormFields, messageLabel, submitLabel, isArabic }:
           </div>
         ))}
 
-        <div>
+        <div className="md:col-span-2">
           <label htmlFor="contact-message" className="sr-only">
             {messageLabel}
           </label>
@@ -292,6 +324,7 @@ function ContactForm({ contactFormFields, messageLabel, submitLabel, isArabic }:
       </div>
 
       <button type="submit" className={styles.submitButton}>
+        <FaPaperPlane aria-hidden="true" />
         {submitLabel}
       </button>
     </form>
@@ -313,49 +346,44 @@ function Section6() {
       aria-labelledby="contact-section-heading"
     >
       <div className={styles.container}>
-        <svg className="h-0 w-0" aria-hidden="true" focusable="false">
-          <defs>
-            <linearGradient id={goldGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#FBEF9D" />
-              <stop offset="100%" stopColor="#A96522" />
-            </linearGradient>
-          </defs>
-        </svg>
-
         <div className={styles.headingRow}>
           <span className={styles.divider} />
           <h2 id="contact-section-heading" className={styles.heading}>
             {copy.title}
           </h2>
-          <span className="h-[3px] w-[58px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[90px] md:w-[120px]" />
+          <span className="h-[3px] w-[56px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]" />
         </div>
 
-        <div className={styles.shell}>
-          <div className={styles.shellInner}>
-            <div
-              className="flex flex-col-reverse gap-10 md:flex-row-reverse md:items-start md:justify-between md:gap-16 lg:gap-12"
-            >
-              <aside
-                className={`w-full self-center md:w-[250px] md:shrink-0 lg:w-[360px] ${
-                  isArabic ? 'text-center md:text-right' : 'text-center md:text-left'
-                }`}
-              >
-                <h3 className="text-xl font-bold text-[#F4F4F4] sm:text-2xl">{copy.contactDetailsTitle}</h3>
+        <p className={styles.subtitle}>{copy.subtitle}</p>
 
-                <ContactInfoList contactInfo={contactInfo} />
+        <div className={styles.contentGrid}>
+          <aside
+            className={`${styles.infoCard} ${isArabic ? 'text-right' : 'text-left'}`}
+            aria-label={copy.contactAriaLabel}
+          >
+            <h3 className=" text-[22px] font-bold text-[#F8F9FC] sm:text-[26px]">
+              {copy.contactDetailsTitle}
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-[#D4DBE8]">{copy.contactDetailsDescription}</p>
 
-                <p className="mt-8 text-base font-semibold text-[#FFFFFF] sm:text-lg">{copy.followUs}</p>
+            <ContactInfoList contactInfo={contactInfo} />
 
-                <SocialLinksList socialLinks={socialLinks} />
-              </aside>
+            <p className="mt-6 text-sm font-semibold uppercase tracking-[0.12em] text-[#E6BF80]">
+              {copy.followUs}
+            </p>
+            <SocialLinksList socialLinks={socialLinks} />
+          </aside>
 
-              <ContactForm
-                contactFormFields={contactFormFields}
-                messageLabel={copy.message}
-                submitLabel={copy.submit}
-                isArabic={isArabic}
-              />
-            </div>
+          <div className={`${styles.formCard} ${isArabic ? 'text-right' : 'text-left'}`}>
+            <h3 className="text-[22px] font-bold text-[#F8F9FC] sm:text-[26px]">{copy.formTitle}</h3>
+            <p className="mt-3 text-sm leading-7 text-[#D4DBE8]">{copy.formDescription}</p>
+
+            <ContactForm
+              contactFormFields={contactFormFields}
+              messageLabel={copy.message}
+              submitLabel={copy.submit}
+              isArabic={isArabic}
+            />
           </div>
         </div>
       </div>

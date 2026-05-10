@@ -228,8 +228,8 @@ function Section3() {
   const isEvenCard = activeIndex % 2 === 0
 
   const gridClassName = isEvenCard
-    ? 'lg:grid-cols-[minmax(260px,0.95fr)_minmax(0,1.35fr)]'
-    : 'lg:grid-cols-[minmax(0,1.35fr)_minmax(260px,0.95fr)]'
+    ? 'md:grid-cols-[minmax(230px,0.95fr)_minmax(0,1.15fr)] lg:grid-cols-[minmax(260px,0.95fr)_minmax(0,1.35fr)]'
+    : 'md:grid-cols-[minmax(0,1.15fr)_minmax(230px,0.95fr)] lg:grid-cols-[minmax(0,1.35fr)_minmax(260px,0.95fr)]'
   const cardAnimationClass =
     slideDirection === 'next'
       ? 'motion-safe:animate-[section3-card-next_460ms_cubic-bezier(0.22,1,0.36,1)]'
@@ -254,18 +254,18 @@ function Section3() {
 
   return (
     <section
-      className="relative overflow-hidden bg-[#07090D] py-8 sm:py-10 lg:py-14 xl:py-16"
+      className="relative overflow-hidden bg-[#07090D] py-7 sm:py-9 md:py-10 lg:py-14 xl:py-16"
       dir={isArabic ? 'rtl' : 'ltr'}
       aria-labelledby="products-heading"
       id="products-section"
     >
-      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-10 lg:px-16 xl:px-[100px]">
-        <div className="relative mb-6 flex items-center justify-center sm:mb-8 md:mb-10">
+      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-8 lg:px-16 xl:px-[100px]">
+        <div className="relative mb-5 flex items-center justify-center sm:mb-7 md:mb-8 lg:mb-10">
           <div className="flex items-center justify-center gap-2.5 sm:gap-4 md:gap-6">
             <span className="h-[3px] w-12 bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-20 md:w-[130px]" />
             <h2
               id="products-heading"
-              className={`${sectionTitleGradient} text-center text-[30px] font-extrabold leading-none sm:text-[34px] md:text-[36px] lg:text-[40px]`}
+              className={`${sectionTitleGradient} text-center text-[28px] font-extrabold leading-[1.1] sm:text-[32px] md:text-[36px] lg:text-[40px]`}
             >
               {copy.title}
             </h2>
@@ -274,16 +274,16 @@ function Section3() {
 
           <a
             href="#"
-            className={`absolute hidden items-center justify-center rounded-full border border-[#D39B52] bg-[#0A0D13] px-5 py-2.5 text-[13px] font-semibold text-[#F6F7F9] transition-all duration-300 hover:bg-gradient-to-l hover:from-[#FBEF9D] hover:to-[#A96522] hover:text-white md:inline-flex ${isArabic ? 'left-0' : 'right-0'}`}
+            className={`absolute hidden items-center justify-center rounded-full border border-[#D39B52] bg-[#0A0D13] px-5 py-2.5 text-[13px] font-semibold text-[#F6F7F9] transition-all duration-300 hover:bg-gradient-to-l hover:from-[#FBEF9D] hover:to-[#A96522] hover:text-white lg:inline-flex ${isArabic ? 'left-0' : 'right-0'}`}
           >
             {copy.viewAllProducts}
           </a>
         </div>
 
-        <div className="-mt-2 mb-5 flex justify-center sm:mb-6 md:hidden">
+        <div className="mb-5 flex justify-center lg:hidden">
           <a
             href="#"
-            className="inline-flex items-center justify-center rounded-full border border-[#D39B52] bg-[#0A0D13] px-4 py-2 text-[11px] font-semibold text-[#F6F7F9] transition-all duration-300 hover:bg-gradient-to-l hover:from-[#FBEF9D] hover:to-[#A96522] hover:text-white sm:px-5 sm:py-2.5 sm:text-[13px]"
+            className="inline-flex items-center justify-center rounded-full border border-[#D39B52] bg-[#0A0D13] px-4 py-2 text-[11px] font-semibold text-[#F6F7F9] transition-all duration-300 hover:bg-gradient-to-l hover:from-[#FBEF9D] hover:to-[#A96522] hover:text-white sm:px-5 sm:py-2.5 sm:text-[13px] md:px-6 md:py-2.5 md:text-[13px]"
           >
             {copy.viewAllProducts}
           </a>
@@ -293,7 +293,7 @@ function Section3() {
           key={activeProduct.id}
           className={`group mx-auto w-full max-w-[1440px] overflow-hidden rounded-[14px] border border-[#B9782F66] bg-[#080B10] shadow-[0_14px_34px_rgba(0,0,0,0.34)] sm:rounded-[18px] ${cardAnimationClass}`}
         >
-          <div className="relative p-2.5 sm:p-4">
+          <div className="relative p-2.5 sm:p-3.5 md:p-4 lg:p-5">
             <span
               className={`pointer-events-none absolute top-0 h-12 w-12 bg-[#D39B522E] sm:h-16 sm:w-16 ${
                 isArabic
@@ -311,10 +311,10 @@ function Section3() {
               aria-hidden="true"
             />
 
-            <div className={`grid gap-2.5 ${gridClassName} sm:gap-3 lg:gap-4`}>
+            <div className={`grid gap-2.5 ${gridClassName} sm:gap-3 md:gap-3.5 lg:gap-4`}>
               <div
-                className={`relative min-h-[220px] overflow-hidden rounded-[14px] border border-[#D39B523D] sm:min-h-[280px] lg:min-h-0 lg:aspect-auto ${
-                  isEvenCard ? 'lg:order-1' : 'lg:order-2'
+                className={`relative min-h-[200px] overflow-hidden rounded-[14px] border border-[#D39B523D] sm:min-h-[245px] md:min-h-[265px] lg:min-h-0 lg:aspect-auto ${
+                  isEvenCard ? 'md:order-1' : 'md:order-2'
                 }`}
               >
                 <img
@@ -327,61 +327,61 @@ function Section3() {
                   className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent"
                   aria-hidden="true"
                 />
-                <span className={`absolute top-3 inline-flex items-center gap-1.5 rounded-full border border-[#FBEF9D70] bg-[#040506C7] px-2.5 py-1 text-[11px] text-[#FBEF9D] ${isArabic ? 'right-3' : 'left-3'}`}>
+                <span className={`absolute top-2.5 inline-flex items-center gap-1.5 rounded-full border border-[#FBEF9D70] bg-[#040506C7] px-2.5 py-1 text-[11px] text-[#FBEF9D] sm:top-3 sm:text-[12px] ${isArabic ? 'right-2.5 sm:right-3' : 'left-2.5 sm:left-3'}`}>
                   <FiCheckCircle className="text-xs" />
                   {activeProduct.category}
                 </span>
               </div>
 
-              <div className={`z-10 space-y-2.5 sm:space-y-3 ${isEvenCard ? 'lg:order-2' : 'lg:order-1'}`}>
-                <div className="rounded-[14px] border border-[#FFFFFF1B] bg-[#0A0F15] p-3 sm:p-4">
-                  <h3 className="mt-1 text-[20px] font-extrabold leading-tight text-white sm:mt-2 sm:text-[25px]">
+              <div className={`z-10 space-y-2.5 sm:space-y-3 md:space-y-3.5 lg:space-y-4 ${isEvenCard ? 'md:order-2' : 'md:order-1'}`}>
+                <div className="rounded-[14px] border border-[#FFFFFF1B] bg-[#0A0F15] p-3 sm:p-3.5 md:p-4 lg:p-5">
+                  <h3 className="mt-1 text-[18px] font-extrabold leading-[1.35] text-white sm:mt-1.5 sm:text-[22px] md:text-[24px] lg:text-[25px]">
                     {activeProduct.title}
                   </h3>
-                  <p className="mt-3 text-[13px] leading-[1.8] text-[#DCE2EA] sm:text-[14px]">
+                  <p className="mt-2.5 text-[13px] leading-[1.75] text-[#DCE2EA] sm:mt-3 sm:text-[14px] md:text-[14px] lg:text-[14px]">
                     {activeProduct.description}
                   </p>
                 </div>
 
-                <div className="grid gap-3 lg:grid-cols-[1.15fr_0.85fr]">
-                  <div className="rounded-[14px] border border-[#FFFFFF1B] bg-[#0B1017] p-3 sm:p-4">
-                    <div className="mb-3 flex items-center gap-2">
-                      <h4 className="text-[17px] font-extrabold text-[#F0CB77]">{copy.specifications}</h4>
+                <div className="grid gap-2.5 sm:gap-3 lg:grid-cols-[1.15fr_0.85fr]">
+                  <div className="rounded-[14px] border border-[#FFFFFF1B] bg-[#0B1017] p-3 sm:p-3.5 md:p-4 lg:p-4">
+                    <div className="mb-2.5 flex items-center gap-2 sm:mb-3">
+                      <h4 className="text-[17px] font-extrabold text-[#F0CB77] sm:text-[18px] lg:text-[17px]">{copy.specifications}</h4>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                    <div className="grid grid-cols-2 gap-2 md:gap-2.5">
                       {activeProduct.specs.map(({ id, icon: Icon, title, description }) => (
-                        <div key={id} className="rounded-[10px] border border-[#FFFFFF18] bg-[#FFFFFF08] p-2.5 sm:p-3">
-                          <div className="mb-1.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#E0B46824] text-[#EAC170]">
-                            <Icon className="text-[13px]" />
+                        <div key={id} className="rounded-[10px] border border-[#FFFFFF18] bg-[#FFFFFF08] p-2.5 sm:p-2.5 md:p-3 lg:p-3">
+                          <div className="mb-1.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#E0B46824] text-[#EAC170] sm:h-7 sm:w-7 lg:h-6 lg:w-6">
+                            <Icon className="text-[13px] sm:text-[14px] lg:text-[13px]" />
                           </div>
-                          <p className="text-[12px] font-semibold text-[#F2F5F8] sm:text-[13px]">{title}</p>
-                          <p className="mt-0.5 text-[11px] leading-relaxed text-[#BAC4D0]">{description}</p>
+                          <p className="text-[12px] font-semibold leading-[1.45] text-[#F2F5F8] sm:text-[13px] md:text-[14px] lg:text-[13px]">{title}</p>
+                          <p className="mt-0.5 text-[11px] leading-[1.65] text-[#BAC4D0] sm:text-[12px] lg:text-[11px]">{description}</p>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex h-full flex-col justify-between rounded-[14px] border border-[#FFFFFF1B] bg-[#0B1017] p-3 sm:p-4">
+                  <div className="flex h-full flex-col justify-between rounded-[14px] border border-[#FFFFFF1B] bg-[#0B1017] p-3 sm:p-3.5 md:hidden md:p-4 lg:flex lg:p-4">
                     <div>
-                      <p className="text-[13px] font-semibold text-[#F0CB77]">{copy.suitableFor}</p>
-                      <div className="mt-2 flex flex-wrap gap-1.5">
+                      <p className="text-[13px] font-semibold text-[#F0CB77] sm:text-[14px] lg:text-[13px]">{copy.suitableFor}</p>
+                      <div className="mt-2 flex flex-wrap gap-1.5 sm:gap-2">
                         {activeProduct.suitableFor.map((item) => (
                           <span
                             key={`${activeProduct.id}-${item}`}
-                            className="rounded-full border border-[#FFFFFF2A] bg-[#0A0D13] px-2.5 py-1 text-[11px] text-[#EAF0F6]"
+                            className="rounded-full border border-[#FFFFFF2A] bg-[#0A0D13] px-2.5 py-1 text-[11px] text-[#EAF0F6] sm:px-3 sm:text-[12px] lg:px-2.5 lg:text-[11px]"
                           >
                             {item}
                           </span>
                         ))}
                       </div>
 
-                      <p className="mt-3 text-[13px] font-semibold text-[#F0CB77]">{copy.sizesAndShipping}</p>
-                      <div className="mt-2 flex flex-wrap gap-1.5">
+                      <p className="mt-2.5 text-[13px] font-semibold text-[#F0CB77] sm:mt-3.5 sm:text-[14px] lg:mt-3 lg:text-[13px]">{copy.sizesAndShipping}</p>
+                      <div className="mt-2 flex flex-wrap gap-1.5 sm:gap-2">
                         {activeProduct.sizes.map((size) => (
                           <span
                             key={`${activeProduct.id}-${size}`}
-                            className="rounded-full border border-[#FFFFFF2A] bg-[#0A0D13] px-2.5 py-1 text-[11px] text-[#EAF0F6]"
+                            className="rounded-full border border-[#FFFFFF2A] bg-[#0A0D13] px-2.5 py-1 text-[11px] text-[#EAF0F6] sm:px-3 sm:text-[12px] lg:px-2.5 lg:text-[11px]"
                           >
                             {size}
                           </span>
@@ -391,7 +391,7 @@ function Section3() {
 
                     <a
                       href="#"
-                      className="group mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#D39B52] bg-[#0A0D13] px-4 py-2.5 text-[12px] font-semibold text-[#F6F7F9] transition-all duration-300 hover:bg-gradient-to-l hover:from-[#FBEF9D] hover:to-[#A96522] hover:text-white sm:w-fit sm:px-5 sm:text-[13px]"
+                      className="group mt-3.5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#D39B52] bg-[#0A0D13] px-4 py-2.5 text-[12px] font-semibold text-[#F6F7F9] transition-all duration-300 hover:bg-gradient-to-l hover:from-[#FBEF9D] hover:to-[#A96522] hover:text-white sm:mt-4 sm:w-fit sm:px-5 sm:text-[13px] md:text-[14px] lg:mt-4 lg:text-[13px]"
                     >
                       {copy.requestQuote}
                       {isArabic ? (
@@ -403,11 +403,57 @@ function Section3() {
                   </div>
                 </div>
               </div>
+
+              <div className="z-10 hidden md:order-3 md:col-span-2 md:block lg:hidden">
+                <div className="flex h-full flex-col justify-between rounded-[14px] border border-[#FFFFFF1B] bg-[#0B1017] p-3 sm:p-3.5 md:p-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-[13px] font-semibold text-[#F0CB77] sm:text-[14px]">{copy.suitableFor}</p>
+                      <div className="mt-2 flex flex-wrap gap-1.5 sm:gap-2">
+                        {activeProduct.suitableFor.map((item) => (
+                          <span
+                            key={`${activeProduct.id}-tablet-${item}`}
+                            className="rounded-full border border-[#FFFFFF2A] bg-[#0A0D13] px-2.5 py-1 text-[11px] text-[#EAF0F6] sm:px-3 sm:text-[12px]"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="text-[13px] font-semibold text-[#F0CB77] sm:text-[14px]">{copy.sizesAndShipping}</p>
+                      <div className="mt-2 flex flex-wrap gap-1.5 sm:gap-2">
+                        {activeProduct.sizes.map((size) => (
+                          <span
+                            key={`${activeProduct.id}-tablet-${size}`}
+                            className="rounded-full border border-[#FFFFFF2A] bg-[#0A0D13] px-2.5 py-1 text-[11px] text-[#EAF0F6] sm:px-3 sm:text-[12px]"
+                          >
+                            {size}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <a
+                    href="#"
+                    className="group mt-3.5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#D39B52] bg-[#0A0D13] px-4 py-2.5 text-[12px] font-semibold text-[#F6F7F9] transition-all duration-300 hover:bg-gradient-to-l hover:from-[#FBEF9D] hover:to-[#A96522] hover:text-white sm:mt-4 sm:w-fit sm:px-5 sm:text-[13px] md:text-[14px]"
+                  >
+                    {copy.requestQuote}
+                    {isArabic ? (
+                      <FiArrowLeft className="text-sm transition-transform duration-300 group-hover:-translate-x-1" />
+                    ) : (
+                      <FiArrowRight className="text-sm transition-transform duration-300 group-hover:translate-x-1" />
+                    )}
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </article>
 
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 sm:mt-6 sm:gap-3">
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 sm:mt-6 sm:gap-3 md:mt-6 lg:mt-5">
           <button
             type="button"
             onClick={showPrevious}

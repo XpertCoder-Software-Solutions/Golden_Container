@@ -135,21 +135,21 @@ const footerCopyByLanguage: Record<Language, {
   newsletterTitle: string
   footerAriaLabel: string
   contactAriaLabel: string
-  designedBy: string
+  designedByPrefix: string
   copyrightPrefix: string
 }> = {
   en: {
     newsletterTitle: 'Newsletter',
     footerAriaLabel: 'Site footer',
     contactAriaLabel: 'Contact information',
-    designedBy: 'Designed and developed by XpertCoder Software Solutions.',
+    designedByPrefix: 'Designed and developed by',
     copyrightPrefix: 'Copyright ©',
   },
   ar: {
     newsletterTitle: 'النشرة الإخبارية',
     footerAriaLabel: 'تذييل الموقع',
     contactAriaLabel: 'معلومات التواصل',
-    designedBy: 'صمم وطوّر بواسطة XpertCoder Software Solutions.',
+    designedByPrefix: 'صمم وطوّر بواسطة',
     copyrightPrefix: 'حقوق النشر ©',
   },
 }
@@ -159,17 +159,17 @@ const styles = {
   mutedText: 'text-[13px] leading-7 text-[#DEDEDE] md:text-[15px] md:leading-6 lg:text-[12px]',
   companySection: 'space-y-12 sm:space-y-6',
   sectionHeader: 'space-y-4',
-  sectionHeaderCompact: 'space-y-2',
+  sectionHeaderCompact: 'space-y-4',
   sectionTitle: 'text-[15px] font-semibold md:text-base lg:text-lg',
   sectionLine: 'block h-1 w-28 bg-gradient-to-l from-[#A96522] to-[#FBEF9D] sm:w-36',
-  navList: 'mt-1.5 space-y-1.5 sm:mt-2 sm:space-y-2',
+  navList: 'mt-1.5 space-y-1.5 sm:mt-5 sm:space-y-2',
   navLink: 'text-[14px] transition-colors duration-200 hover:text-[#d6ac57] md:text-[15px] lg:text-base',
   socialList: 'flex flex-wrap justify-center gap-4 pt-1 sm:justify-start sm:gap-5',
   newsletterSection: 'flex h-full flex-col gap-4 sm:gap-5',
   socialLink:
     'grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#A96522] to-[#FBEF9D] text-[15px] text-white transition-transform duration-200 hover:scale-110 sm:h-10 sm:w-10 sm:text-lg',
   contactsGrid:
-    'mt-8 grid w-full gap-x-6 gap-y-4 pt-6 md:mt-10 md:grid-cols-2 md:pt-7 xl:grid-cols-3',
+    'mt-8 grid w-full gap-x-6 gap-y-4 pt-6 md:mt-10 md:grid-cols-3 md:pt-7 xl:grid-cols-3',
   contactItem:
     'flex items-start gap-3 text-[13px] text-[#DEDEDE] md:text-[14px] lg:text-[15px] sm:items-center sm:gap-4',
   contactIcon:
@@ -260,7 +260,7 @@ function Footer() {
             <FooterLinksSection key={title} title={title} links={links} />
           ))}
 
-          <section className={`${styles.newsletterSection} md:col-span-2 lg:col-span-1`}>
+          <section className={`${styles.newsletterSection} lg:col-span-1`}>
             <SectionHeader title={copy.newsletterTitle} />
 
             <p className={styles.NewsletterText}>{newsletterDescription}</p>
@@ -308,8 +308,19 @@ function Footer() {
             isArabic ? 'lg:text-right' : 'lg:text-left'
           } lg:text-base`}
         >
-          <div className="flex flex-col-reverse items-center gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <p>{copy.designedBy}</p>
+          <div className="flex flex-col-reverse items-center gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
+            <p>
+              {copy.designedByPrefix}{' '}
+              <a
+                href="https://xpertcodersolutions.com"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-block bg-gradient-to-t from-[#FBEF9D] to-[#A96522] bg-clip-text text-transparent transition-all duration-200 hover:from-[#d6ac57] hover:to-[#FBEF9D]"
+              >
+                XpertCoder Software Solutions
+              </a>
+              .
+            </p>
             <p>
               {copy.copyrightPrefix} {year}. {isArabic ? 'جميع الحقوق محفوظة' : 'All rights reserved.'}
             </p>

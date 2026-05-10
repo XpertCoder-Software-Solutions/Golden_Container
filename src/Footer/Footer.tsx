@@ -229,7 +229,7 @@ function Footer() {
       dir={isArabic ? 'rtl' : 'ltr'}
       aria-label={copy.footerAriaLabel}
     >
-      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-10 lg:px-[100px]">
+      <div className="mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]">
         <svg className="h-0 w-0" aria-hidden="true" focusable="false">
           <defs>
             <linearGradient

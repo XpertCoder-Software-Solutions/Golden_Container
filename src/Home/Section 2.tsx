@@ -7,8 +7,7 @@ type AboutStat = {
   label: string
 }
 
-const goldGradient = 'bg-gradient-to-l from-[#FBEF9D] to-[#A96522]'
-const sectionTitleGradient = `${goldGradient} bg-clip-text text-transparent`
+const sectionTitleGradient = `bg-gradient-to-t from-[#FBEF9D] to-[#A96522] bg-clip-text text-transparent`
 
 const aboutStatsByLanguage: Record<Language, ReadonlyArray<AboutStat>> = {
   en: [
@@ -57,54 +56,68 @@ function Section2() {
   const { language, isArabic } = useLanguage()
   const aboutStats = aboutStatsByLanguage[language]
   const copy = sectionCopyByLanguage[language]
+  const headingLineHeightClass = isArabic ? 'leading-[1.42]' : 'leading-[1.2]'
+  const paragraphLineHeightClass = isArabic ? 'leading-[1.95]' : 'leading-[1.8]'
+  const imageShadowClass = isArabic
+    ? 'md:shadow-[80px_80px_50px_-50px_rgba(251,239,157,0.2)]'
+    : 'md:shadow-[-80px_80px_50px_-50px_rgba(251,239,157,0.2)]'
+  const imagePositionClass = isArabic ? 'lg:justify-self-end' : 'lg:justify-self-start'
 
   return (
     <section
       id="about-section"
-      className="relative overflow-hidden bg-[#04070E] py-12 sm:py-16 lg:py-20"
+      className="relative overflow-hidden bg-[#04070E] py-8 sm:py-10 md:py-12 lg:py-16 xl:py-20"
       dir={isArabic ? 'rtl' : 'ltr'}
       aria-labelledby="about-us-heading"
     >
-      <div className="relative z-10 mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-10 lg:px-[100px]">
-        <div className="mb-10 flex items-center justify-center gap-3 sm:mb-12 sm:gap-5 lg:mb-16 lg:gap-8">
+      <div className="relative z-10 mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]">
+        <div className="mb-7 flex items-center justify-center gap-2.5 sm:mb-9 sm:gap-4 md:mb-11 md:gap-6 lg:mb-14 lg:gap-8">
           <span
-            className="h-[3px] w-[64px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[110px] md:w-[170px] lg:w-[260px]"
+            className="h-[3px] w-[44px] bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]"
             aria-hidden="true"
           />
           <h2
             id="about-us-heading"
-            className={`${sectionTitleGradient} text-center text-[30px] font-extrabold sm:text-[34px] md:text-[36px] lg:text-[40px]`}
+            className={`${sectionTitleGradient} text-center text-[28px] font-extrabold lg:leading-[1.2] sm:text-[32px] md:text-[36px] lg:text-[40px]`}
           >
             {copy.title}
           </h2>
           <span
-            className="h-[3px] w-[64px] bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-[110px] md:w-[170px] lg:w-[260px]"
+            className="h-[3px] w-[44px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]"
             aria-hidden="true"
           />
         </div>
 
         <div
-          className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.03fr)_minmax(0,1fr)] xl:gap-16"
+          className="mb-10 grid items-center gap-7 sm:mb-12 sm:gap-9 md:mb-14 md:gap-10 lg:mb-16 lg:grid-cols-[minmax(0,500px)_minmax(0,1fr)] lg:gap-12 xl:gap-16"
           dir={isArabic ? 'rtl' : 'ltr'}
         >
-          <div className="relative">
-            <div className="relative overflow-hidden rounded-[24px] bg-[#03060C] shadow-[0_36px_80px_rgba(0,0,0,0.56)] sm:rounded-[30px]">
+          <div className={`relative mx-auto w-full max-w-[500px] ${imagePositionClass}`}>
+            <div
+              className={`relative overflow-hidden rounded-[20px] bg-[#03060C] shadow-[0_26px_60px_rgba(0,0,0,0.52)] sm:rounded-[24px] lg:h-[398px] lg:w-[500px] lg:rounded-[30px] ${imageShadowClass}`}
+            >
               <img
                 src={aboutUsImage}
                 alt={copy.imageAlt}
-                className="aspect-[1160/956] w-full object-cover"
+                className="aspect-[1160/956] h-auto w-full object-cover lg:h-[398px] lg:w-[500px] lg:aspect-auto"
                 loading="lazy"
               />
             </div>
           </div>
 
-          <article className={`space-y-5 sm:space-y-6 lg:space-y-7 ${isArabic ? 'text-right' : 'text-left'}`} dir={isArabic ? 'rtl' : 'ltr'}>
-            <h3 className="text-[40px] font-extrabold leading-tight text-[#F4F7FB]">
+          <article
+            className={`space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-7 ${isArabic ? 'text-right' : 'text-left'}`}
+            dir={isArabic ? 'rtl' : 'ltr'}
+          >
+            <h3 className={`text-[28px] font-extrabold text-[#F4F7FB] sm:text-[32px] md:text-[36px] lg:text-[40px] ${headingLineHeightClass}`}>
               {copy.heading}
             </h3>
 
             {copy.paragraphs.map((paragraph) => (
-              <p key={paragraph} className="text-[#EDF0F3]">
+              <p
+                key={paragraph}
+                className={`text-[14px] text-[#EDF0F3] sm:text-[15px] md:text-base ${paragraphLineHeightClass}`}
+              >
                 {paragraph}
               </p>
             ))}
@@ -112,19 +125,19 @@ function Section2() {
         </div>
 
         <div
-          className="mt-8 grid grid-cols-1 gap-4 sm:mt-10 md:grid-cols-2 xl:mt-14 xl:grid-cols-4"
+          className="grid grid-cols-2 gap-3.5 sm:gap-4 md:grid-cols-2 lg:gap-5 xl:grid-cols-4"
           dir={isArabic ? 'rtl' : 'ltr'}
         >
           {aboutStats.map(({ id, value, label }) => (
             <article
               key={id}
-              className="rounded-[8px] border border-[#E9EDEF] bg-[#04070E] px-5 py-8 text-center shadow-[0_16px_34px_rgba(0,0,0,0.28)] sm:px-6 sm:py-10"
+              className="rounded-[8px] border border-[#E9EDEF] bg-[#04070E] px-4 py-6 text-center shadow-[0_16px_34px_rgba(0,0,0,0.28)] sm:px-5 sm:py-8 md:px-6 md:py-9"
               dir={isArabic ? 'rtl' : 'ltr'}
             >
-              <p className="text-[56px] font-bold leading-none text-[#F4F6F8]">
+              <p className="font-bold leading-none text-[#F4F6F8] sm:text-[44px] md:text-[50px] lg:text-[56px]">
                 {value}
               </p>
-              <p className="mt-3 text-[24px] font-medium text-[#F0F3F6]">
+              <p className="mt-2.5 font-medium leading-[1.45] text-[#F0F3F6] sm:mt-3 sm:text-[20px] md:text-[22px] lg:text-[24px]">
                 {label}
               </p>
             </article>

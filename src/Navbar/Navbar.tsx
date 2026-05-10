@@ -65,7 +65,7 @@ const styles = {
     'bg-gradient-to-b from-[#05070D]/90 via-[#05070D]/58 to-transparent pb-2 pt-2 sm:pt-3',
   headerScrolled:
     '',
-  navContainer: 'relative mx-auto w-full max-w-[1440px] px-[18px] sm:px-[25px] md:px-[50px] lg:px-[100px]',
+  navContainer: 'relative mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]',
   navShell:
     'relative flex items-center justify-between gap-3 overflow-hidden rounded-[22px] border transition-[height,border-color,background-color,box-shadow,padding] duration-500',
   navShellAtTop:

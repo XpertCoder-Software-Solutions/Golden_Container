@@ -191,7 +191,7 @@ const messageBaseStyles =
 
 const styles = {
   section: 'relative overflow-hidden bg-[#07090D] py-9 sm:py-11 md:py-14 lg:py-16',
-  container: 'mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-10 lg:px-[100px]',
+  container: 'mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]',
   headingRow: 'relative z-10 mb-7 flex items-center justify-center gap-2.5 sm:mb-9 sm:gap-4 md:mb-10 md:gap-7',
   divider: `h-[3px] w-[44px] ${goldGradientBackground} sm:w-[88px] md:w-[120px]`,
   heading: `${sectionTitleGradient} text-center text-3xl font-extrabold leading-[1.15] sm:text-4xl`,

@@ -54,7 +54,7 @@ const serviceCardsByLanguage: Record<Language, ReadonlyArray<ServiceCard>> = {
       id: 'coal-production',
       title: 'إنتاج الفحم',
       description:
-        'ننتج فحم نباتي عالي الجودة باستخدام أفضل الخامات، و أحدث تقنيات الإنتاج لضمان أعلى معايير الجودة و الأداء',
+        'ننتج فحمًا نباتيًا عالي الجودة باستخدام أفضل الخامات وأحدث تقنيات الإنتاج لضمان أعلى معايير الجودة والأداء.',
       image: coalImage,
       borderBaseClassName: 'bg-[#EEEEEE]',
     },
@@ -62,15 +62,15 @@ const serviceCardsByLanguage: Record<Language, ReadonlyArray<ServiceCard>> = {
       id: 'packaging',
       title: 'التعبئة والتغليف',
       description:
-        'تعبئة احترافية و مخصصة تحافظ على جودة الفحم النباتي و تلبي جميع متطلبات الشحن و التصدير الدولية',
+        'تعبئة احترافية ومخصصة تحافظ على جودة الفحم النباتي وتلبي جميع متطلبات الشحن والتصدير الدولية.',
       image: packagingImage,
       borderBaseClassName: 'bg-[#EEEEEE]',
     },
     {
       id: 'shipping-export',
-      title: 'الشحن و التصدير',
+      title: 'الشحن والتصدير',
       description:
-        'إدارة متكاملة لعمليات الشحن و التصدير إلى مختلف دول أوروبا و أفريقيا و آسيا بأعلى مستويات الأمان و السرعة',
+        'إدارة متكاملة لعمليات الشحن والتصدير إلى مختلف دول أوروبا وأفريقيا وآسيا بأعلى مستويات الأمان والسرعة.',
       image: exportingImage,
       borderBaseClassName: 'bg-[#EEEEEE]',
     },
@@ -78,7 +78,7 @@ const serviceCardsByLanguage: Record<Language, ReadonlyArray<ServiceCard>> = {
       id: 'wholesale',
       title: 'التوريد بالجملة',
       description:
-        'نوفر كميات كبيرة من الفحم النباتي بأسعار تنافسية و جودة ثابتة لتلبية احتياجات الأسواق العالمية والشركاء التجاريين',
+        'نوفر كميات كبيرة من الفحم النباتي بأسعار تنافسية وجودة ثابتة لتلبية احتياجات الأسواق العالمية والشركاء التجاريين.',
       image: coalPackageImage,
       borderBaseClassName: 'bg-[#EEEEEE]',
     },
@@ -100,7 +100,7 @@ const sectionCopyByLanguage: Record<Language, {
     title: 'خدماتنا',
     heading: 'حلول متكاملة بجودة عالمية',
     description:
-      'نقدم مجموعة متكاملة من الخدمات لضمان أفضل جودة للفحم النباتي من الإنتاج حتى وصوله إلى عملائنا حول العالم',
+      'نقدم مجموعة متكاملة من الخدمات لضمان أفضل جودة للفحم النباتي من الإنتاج حتى وصوله إلى عملائنا حول العالم.',
   },
 }
 
@@ -108,47 +108,52 @@ function Section4() {
   const { language, isArabic } = useLanguage()
   const serviceCards = serviceCardsByLanguage[language]
   const copy = sectionCopyByLanguage[language]
+  const headingLineHeightClass = isArabic ? 'leading-[1.45]' : 'leading-tight'
+  const titleLineHeightClass = isArabic ? 'leading-[1.5]' : 'leading-[1.35]'
+  const cardDescriptionLineHeightClass = isArabic ? 'leading-[2]' : 'leading-[1.8]'
 
   return (
     <section
       id="services-section"
-      className="bg-[#07090D] py-10 sm:py-12 lg:py-16"
+      className="relative overflow-hidden bg-[#07090D] py-9 sm:py-11 lg:py-14 xl:py-16"
       dir={isArabic ? 'rtl' : 'ltr'}
       aria-labelledby="services-heading"
     >
-      <div className="mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]">
-        <div className="mb-7 flex items-center justify-center gap-3 sm:mb-9 sm:gap-4 md:mb-11 md:gap-6">
+      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-10 lg:px-16 xl:px-[100px]">
+        <div className="mb-7 flex items-center justify-center gap-2.5 sm:mb-9 sm:gap-4 md:mb-10 md:gap-6">
           <span
-            className="h-[3px] w-[56px] bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px] lg:w-[168px]"
+            className="h-[3px] w-[44px] bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]"
             aria-hidden="true"
           />
           <h2
             id="services-heading"
-            className={`${sectionTitleGradient} text-center text-3xl font-extrabold leading-none md:text-[36px] lg:text-[40px]`}
+            className={`${sectionTitleGradient} text-center text-[30px] font-extrabold leading-none sm:text-[34px] md:text-[36px] lg:text-[40px]`}
           >
             {copy.title}
           </h2>
           <span
-            className="h-[3px] w-[56px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px] lg:w-[168px]"
+            className="h-[3px] w-[44px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]"
             aria-hidden="true"
           />
         </div>
 
-        <h3 className="text-center text-[24px] font-extrabold leading-tight text-white md:text-[28px] lg:text-[32px]">
+        <h3
+          className={`mx-auto max-w-[920px] text-center text-[24px] font-extrabold text-white sm:text-[28px] md:text-[30px] lg:text-[32px] ${headingLineHeightClass}`}
+        >
           {copy.heading}
         </h3>
 
-        <p className="mx-auto mt-4 max-w-[1240px] text-center text-base leading-[1.85] text-[#E4E9EE] sm:mt-5 md:text-base lg:text-lg">
+        <p className="mx-auto mt-4 max-w-[920px] text-center text-sm leading-7 text-[#D8DEE8] sm:mt-5 sm:text-[15px] sm:leading-8 md:text-base">
           {copy.description}
         </p>
 
-        <div className="mt-8 grid grid-cols-1 gap-5 sm:mt-10 md:grid-cols-2 xl:mt-12 xl:grid-cols-4">
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:mt-10 sm:gap-5 md:grid-cols-2 xl:mt-12 xl:grid-cols-4">
           {serviceCards.map(({ id, title, description, image, borderBaseClassName }) => (
             <article
               key={id}
-              className={`h-full overflow-hidden rounded-[10px] p-[2px] transition-all duration-300 ${borderBaseClassName} hover:bg-gradient-to-tr hover:from-[#FBEF9D] hover:to-[#A96522]`}
+              className={`h-full overflow-hidden rounded-[12px] p-[2px] transition-all duration-300 ${borderBaseClassName} hover:bg-gradient-to-tr hover:from-[#FBEF9D] hover:to-[#A96522]`}
             >
-              <div className="flex h-full flex-col rounded-[8px] bg-[#07090D]">
+              <div className="flex h-full flex-col rounded-[10px] bg-[#07090D]">
                 <img
                   src={image}
                   alt={title}
@@ -156,15 +161,15 @@ function Section4() {
                   loading="lazy"
                 />
 
-                <div className="flex flex-1 flex-col items-center px-3 pb-6 pt-5 text-center sm:pb-8 sm:pt-6">
-                  <h4 className="text-[24px] font-semibold leading-tight text-white">
+                <div className="flex flex-1 flex-col items-center px-4 pb-6 pt-5 text-center sm:px-3 sm:pb-7 sm:pt-6">
+                  <h4 className={`text-[22px] font-bold text-white sm:text-[23px] ${titleLineHeightClass}`}>
                     {title}
                   </h4>
                   <span
-                    className="mt-3 h-[3px] w-[62px] rounded-[2px] bg-gradient-to-tl from-[#FBEF9D] to-[#A96522] sm:mt-4"
+                    className="mt-3 h-[3px] w-16 rounded-[2px] bg-gradient-to-tl from-[#FBEF9D] to-[#A96522] sm:mt-4"
                     aria-hidden="true"
                   />
-                  <p className="mt-4 text-[15px] leading-[1.8] text-[#E7E9ED] sm:mt-6">
+                  <p className={`mt-4 text-[14px] text-[#E4E8EF] sm:mt-5 sm:text-[15px] ${cardDescriptionLineHeightClass}`}>
                     {description}
                   </p>
                 </div>

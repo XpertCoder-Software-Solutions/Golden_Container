@@ -183,7 +183,7 @@ const sectionCopyByLanguage: Record<
 }
 
 const goldGradientBackground = 'bg-gradient-to-l from-[#FBEF9D] to-[#A96522]'
-const sectionTitleGradient = `${goldGradientBackground} bg-clip-text text-transparent`
+const sectionTitleGradient = `bg-gradient-to-t from-[#FBEF9D] to-[#A96522] bg-clip-text text-transparent`
 const fieldBaseStyles =
   'h-[54px] w-full rounded-[14px] border border-white/15 bg-[#0A0D12] px-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] transition-all duration-200 focus:border-[#D8A45C] focus:ring-2 focus:ring-[#D8A45C]/20 focus:outline-none sm:h-[58px] sm:px-5'
 const messageBaseStyles =

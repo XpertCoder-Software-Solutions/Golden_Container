@@ -1,5 +1,5 @@
 function Section1() {
-  return 
+  return null
 }
 
 export default Section1

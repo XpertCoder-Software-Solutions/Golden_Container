@@ -9,6 +9,7 @@ import {
 } from 'react-icons/fa'
 import type { IconType } from 'react-icons'
 import logo from '../assets/Logo.png'
+import { useLanguage, type Language } from '../i18n/language'
 
 type FooterLink = {
   label: string
@@ -27,6 +28,7 @@ type SocialLink = {
 }
 
 type ContactItem = {
+  id: string
   icon: IconType
   text: string
   href?: string
@@ -34,72 +36,150 @@ type ContactItem = {
 
 const contactIconGradientId = 'footer-contact-icon-gradient'
 
-const navigationSections: NavigationSection[] = [
-  {
-    title: 'روابط سريعة',
-    links: [
-      { label: 'الرئيسية', href: '#' },
-      { label: 'معلومات عنا', href: '#' },
-      { label: 'الرؤية و الرسالة', href: '#' },
-      { label: 'سابقة الأعمال', href: '#' },
-      { label: 'تواصل معنا', href: '#' },
-    ],
-  },
-  {
-    title: 'روابط مهمة',
-    links: [
-      { label: 'سياسة الخصوصية', href: '#' },
-      { label: 'الشروط والأحكام', href: '#' },
-      { label: 'شركاء النجاح', href: '#' },
-      { label: 'الشهادات', href: '#' },
-    ],
-  },
-]
+const companyDescriptionByLanguage: Record<Language, string> = {
+  en:
+    'Golden Container is your trusted partner in trading and exporting premium-quality charcoal. With years of experience in local and global markets, we provide end-to-end export solutions built on quality, commitment, and professionalism to ensure our products reach every destination at the highest standards. With Golden Container, quality is never optional; it is a promise we always keep.',
+  ar:
+    'Golden Container شريكك الموثوق في تجارة وتصدير الفحم النباتي عالي الجودة. بخبرة تمتد لسنوات في الأسواق المحلية والعالمية، نقدم حلول تصدير متكاملة تجمع بين الجودة، الالتزام، والاحترافية لضمان وصول منتجاتنا بأعلى المعايير إلى مختلف أنحاء العالم. مع Golden Container، الجودة ليست خيارًا… بل وعد نلتزم به دائمًا.',
+}
 
-const socialLinks: SocialLink[] = [
-  { icon: FaSnapchatGhost, label: 'Snapchat', href: '#' },
-  { icon: FaTwitter, label: 'Twitter', href: '#' },
-  { icon: FaInstagram, label: 'Instagram', href: '#' },
-  { icon: FaFacebookF, label: 'Facebook', href: '#' },
-]
+const newsletterDescriptionByLanguage: Record<Language, string> = {
+  en: 'Stay connected for updates and new releases. Follow us on social media and stay informed.',
+  ar: 'لا تفوت أي أخبار أو إصدارات، تابعنا على وسائل التواصل الاجتماعي وكن على اطلاع دائم...',
+}
 
-const contacts: ContactItem[] = [
-  {
-    icon: FaMapMarkerAlt,
-    text: 'المعادي - القاهرة - جمهورية مصر العربية',
+const navigationSectionsByLanguage: Record<Language, NavigationSection[]> = {
+  en: [
+    {
+      title: 'Quick Links',
+      links: [
+        { label: 'Home', href: '#home-section' },
+        { label: 'About Us', href: '#about-section' },
+        { label: 'Products', href: '#products-section' },
+        { label: 'Services', href: '#services-section' },
+        { label: 'Contact Us', href: '#contact-section' },
+      ],
+    },
+  ],
+  ar: [
+    {
+      title: 'روابط سريعة',
+      links: [
+        { label: 'الرئيسية', href: '#home-section' },
+        { label: 'من نحن', href: '#about-section' },
+        { label: 'المنتجات', href: '#products-section' },
+        { label: 'خدماتنا', href: '#services-section' },
+        { label: 'تواصل معنا', href: '#contact-section' },
+      ],
+    },
+  ],
+}
+
+const socialLinksByLanguage: Record<Language, SocialLink[]> = {
+  en: [
+    { icon: FaSnapchatGhost, label: 'Snapchat', href: '#' },
+    { icon: FaTwitter, label: 'Twitter', href: '#' },
+    { icon: FaInstagram, label: 'Instagram', href: '#' },
+    { icon: FaFacebookF, label: 'Facebook', href: '#' },
+  ],
+  ar: [
+    { icon: FaSnapchatGhost, label: 'سناب شات', href: '#' },
+    { icon: FaTwitter, label: 'تويتر', href: '#' },
+    { icon: FaInstagram, label: 'إنستجرام', href: '#' },
+    { icon: FaFacebookF, label: 'فيسبوك', href: '#' },
+  ],
+}
+
+const contactsByLanguage: Record<Language, ContactItem[]> = {
+  en: [
+    {
+      id: 'address',
+      icon: FaMapMarkerAlt,
+      text: 'Maadi - Cairo - Egypt',
+    },
+    {
+      id: 'email',
+      icon: FaEnvelope,
+      text: 'info@goldencontainereg.com',
+      href: 'mailto:info@goldencontainereg.com',
+    },
+    {
+      id: 'phone',
+      icon: FaPhoneAlt,
+      text: '+20 1009631733',
+      href: 'tel:+201009631733',
+    },
+  ],
+  ar: [
+    {
+      id: 'address',
+      icon: FaMapMarkerAlt,
+      text: 'المعادي - القاهرة - جمهورية مصر العربية',
+    },
+    {
+      id: 'email',
+      icon: FaEnvelope,
+      text: 'info@goldencontainereg.com',
+      href: 'mailto:info@goldencontainereg.com',
+    },
+    {
+      id: 'phone',
+      icon: FaPhoneAlt,
+      text: '+20 1009631733',
+      href: 'tel:+201009631733',
+    },
+  ],
+}
+
+const footerCopyByLanguage: Record<Language, {
+  newsletterTitle: string
+  footerAriaLabel: string
+  contactAriaLabel: string
+  designedBy: string
+  copyrightPrefix: string
+}> = {
+  en: {
+    newsletterTitle: 'Newsletter',
+    footerAriaLabel: 'Site footer',
+    contactAriaLabel: 'Contact information',
+    designedBy: 'Designed and developed by XpertCoder Software Solutions.',
+    copyrightPrefix: 'Copyright ©',
   },
-  {
-    icon: FaEnvelope,
-    text: 'info@goldencontainereg.com',
-    href: 'mailto:info@goldencontainereg.com',
+  ar: {
+    newsletterTitle: 'النشرة الإخبارية',
+    footerAriaLabel: 'تذييل الموقع',
+    contactAriaLabel: 'معلومات التواصل',
+    designedBy: 'صمم وطوّر بواسطة XpertCoder Software Solutions.',
+    copyrightPrefix: 'حقوق النشر ©',
   },
-  {
-    icon: FaPhoneAlt,
-    text: '+20 1009631733',
-    href: 'tel:+201009631733',
-  },
-]
+}
 
 const styles = {
-  mutedText: 'text-[13px] leading-7 text-[#DEDEDE] md:text-[15px] md:leading-8 lg:text-base',
+  NewsletterText: 'text-[13px] leading-7 text-[#DEDEDE] md:text-[15px] md:leading-8 lg:text-base',
+  mutedText: 'text-[13px] leading-7 text-[#DEDEDE] md:text-[15px] md:leading-6 lg:text-[12px]',
+  companySection: 'space-y-12 sm:space-y-6',
   sectionHeader: 'space-y-4',
+  sectionHeaderCompact: 'space-y-2',
   sectionTitle: 'text-[15px] font-semibold md:text-base lg:text-lg',
   sectionLine: 'block h-1 w-28 bg-gradient-to-l from-[#A96522] to-[#FBEF9D] sm:w-36',
-  navList: 'mt-3 space-y-3 sm:mt-4 sm:space-y-4',
+  navList: 'mt-1.5 space-y-1.5 sm:mt-2 sm:space-y-2',
   navLink: 'text-[14px] transition-colors duration-200 hover:text-[#d6ac57] md:text-[15px] lg:text-base',
-  socialList: 'mt-8 flex flex-wrap justify-center gap-4 pt-1 sm:mt-10 sm:justify-start sm:gap-5',
+  socialList: 'flex flex-wrap justify-center gap-4 pt-1 sm:justify-start sm:gap-5',
+  newsletterSection: 'flex h-full flex-col gap-4 sm:gap-5',
   socialLink:
     'grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#A96522] to-[#FBEF9D] text-[15px] text-white transition-transform duration-200 hover:scale-110 sm:h-10 sm:w-10 sm:text-lg',
   contactsGrid:
     'mt-8 grid w-full gap-x-6 gap-y-4 pt-6 md:mt-10 md:grid-cols-2 md:pt-7 xl:grid-cols-3',
-  contactItem: 'flex items-start gap-3 text-[13px] text-[#DEDEDE] md:text-[14px] lg:text-[15px] sm:items-center sm:gap-4',
-  contactIcon: 'mt-0.5 grid h-5 w-5 shrink-0 place-items-center text-base md:h-6 md:w-6 md:text-lg sm:mt-0',
+  contactItem:
+    'flex items-start gap-3 text-[13px] text-[#DEDEDE] md:text-[14px] lg:text-[15px] sm:items-center sm:gap-4',
+  contactIcon:
+    'mt-0.5 grid h-5 w-5 shrink-0 place-items-center text-base md:h-6 md:w-6 md:text-lg sm:mt-0',
   contactText: 'break-words leading-relaxed',
   contactInteractive:
     'break-words leading-relaxed transition-colors duration-200 hover:text-[#d6ac57]',
-  bottomBar:
-    'mt-7 border-t border-[#4d4d4d] pt-7 text-center text-[12px] leading-6 text-[#DEDEDE] sm:text-sm md:text-[15px] md:leading-7 lg:text-right lg:text-base',
 } as const
+
+const isPhoneLink = (href: string) => href.startsWith('tel:')
 
 function SectionHeader({ title }: { title: string }) {
   return (
@@ -113,7 +193,10 @@ function SectionHeader({ title }: { title: string }) {
 function FooterLinksSection({ title, links }: NavigationSection) {
   return (
     <nav aria-label={title}>
-      <SectionHeader title={title} />
+      <div className={styles.sectionHeaderCompact}>
+        <h3 className={styles.sectionTitle}>{title}</h3>
+        <span className={styles.sectionLine} />
+      </div>
 
       <ul className={styles.navList}>
         {links.map(({ label, href }) => (
@@ -130,9 +213,22 @@ function FooterLinksSection({ title, links }: NavigationSection) {
 
 function Footer() {
   const year = new Date().getFullYear()
+  const { language, isArabic } = useLanguage()
+
+  const companyDescription = companyDescriptionByLanguage[language]
+  const newsletterDescription = newsletterDescriptionByLanguage[language]
+  const navigationSections = navigationSectionsByLanguage[language]
+  const socialLinks = socialLinksByLanguage[language]
+  const orderedSocialLinks = isArabic ? socialLinks : [...socialLinks].reverse()
+  const contacts = contactsByLanguage[language]
+  const copy = footerCopyByLanguage[language]
 
   return (
-    <footer className="bg-[#07090D] py-7 sm:py-12 lg:py-14" dir="rtl">
+    <footer
+      className="bg-[#07090D] py-7 sm:py-12 lg:py-[50px]"
+      dir={isArabic ? 'rtl' : 'ltr'}
+      aria-label={copy.footerAriaLabel}
+    >
       <div className="mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]">
         <svg className="h-0 w-0" aria-hidden="true" focusable="false">
           <defs>
@@ -149,37 +245,28 @@ function Footer() {
           </defs>
         </svg>
 
-        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:gap-y-12 md:gap-x-8 md:gap-y-12 xl:grid-cols-[minmax(320px,1.2fr)_minmax(180px,0.8fr)_minmax(180px,0.8fr)_minmax(320px,1.05fr)] xl:gap-x-10 xl:gap-y-16">
-          <section className="col-span-2 space-y-6 md:col-span-2 xl:col-span-1">
+        <div className="grid grid-cols-1 gap-y-10 sm:gap-y-12 md:grid-cols-2 md:gap-x-[3.5rem] md:gap-y-12 lg:grid-cols-[minmax(355px,1.2fr)_minmax(220px,0.84fr)_minmax(260px,0.96fr)] lg:gap-x-[6.5rem] lg:gap-y-14">
+          <section className={`${styles.companySection} md:col-span-2 lg:col-span-1`}>
             <img
               src={logo}
               alt="Golden Container"
               className="h-[110px] w-[110px] object-contain sm:h-[132px] sm:w-[132px] md:h-[145px] md:w-[145px]"
             />
 
-            <p className={styles.mutedText}>
-              Golden Container شريكك الموثوق في تجارة وتصدير الفحم النباتي عالي
-              الجودة. بخبرة تمتد لسنوات في الأسواق المحلية والعالمية، نقدم حلول
-              تصدير متكاملة تجمع بين الجودة، الالتزام، والاحترافية لضمان وصول
-              منتجاتنا بأعلى المعايير إلى مختلف أنحاء العالم. مع Golden
-              Container، الجودة ليست خيارًا… بل وعد نلتزم به دائمًا.
-            </p>
+            <p className={styles.mutedText}>{companyDescription}</p>
           </section>
 
           {navigationSections.map(({ title, links }) => (
             <FooterLinksSection key={title} title={title} links={links} />
           ))}
 
-          <section className="col-span-2 md:col-span-2 xl:col-span-1">
-            <SectionHeader title="النشرة الإخبارية" />
+          <section className={`${styles.newsletterSection} md:col-span-2 lg:col-span-1`}>
+            <SectionHeader title={copy.newsletterTitle} />
 
-            <p className={`mt-4 ${styles.mutedText}`}>
-              لا تفوت أي أخبار أو إصدارات، تابعنا على وسائل التواصل الاجتماعي
-              وكن على اطلاع دائم...
-            </p>
+            <p className={styles.NewsletterText}>{newsletterDescription}</p>
 
-            <div className={styles.socialList} dir="rtl">
-              {socialLinks.map(({ icon: Icon, label, href }) => (
+            <div className={styles.socialList}>
+              {orderedSocialLinks.map(({ icon: Icon, label, href }) => (
                 <a
                   key={label}
                   href={href}
@@ -193,9 +280,9 @@ function Footer() {
           </section>
         </div>
 
-        <address className={`${styles.contactsGrid} not-italic`}>
-          {contacts.map(({ icon: Icon, text, href }) => (
-            <div key={text} className={styles.contactItem}>
+        <address className={`${styles.contactsGrid} not-italic`} aria-label={copy.contactAriaLabel}>
+          {contacts.map(({ id, icon: Icon, text, href }) => (
+            <div key={id} className={styles.contactItem}>
               <span className={styles.contactIcon}>
                 <Icon style={{ fill: `url(#${contactIconGradientId})` }} />
               </span>
@@ -204,8 +291,8 @@ function Footer() {
                 <a
                   href={href}
                   className={styles.contactInteractive}
-                  dir={href.startsWith('tel:') ? 'ltr' : undefined}
-                  style={href.startsWith('tel:') ? { unicodeBidi: 'plaintext' } : undefined}
+                  dir={isPhoneLink(href) ? 'ltr' : undefined}
+                  style={isPhoneLink(href) ? { unicodeBidi: 'plaintext' } : undefined}
                 >
                   {text}
                 </a>
@@ -216,10 +303,16 @@ function Footer() {
           ))}
         </address>
 
-        <div className={styles.bottomBar}>
+        <div
+          className={`mt-7 border-t border-[#4d4d4d] pt-7 text-center text-[12px] leading-6 text-[#DEDEDE] sm:text-sm md:text-[15px] md:leading-7 ${
+            isArabic ? 'lg:text-right' : 'lg:text-left'
+          } lg:text-base`}
+        >
           <div className="flex flex-col-reverse items-center gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <p>صمم وطوّر بواسطة XpertCoder Software Solutions.</p>
-            <p>حقوق النشر © {year}. جميع الحقوق محفوظة</p>
+            <p>{copy.designedBy}</p>
+            <p>
+              {copy.copyrightPrefix} {year}. {isArabic ? 'جميع الحقوق محفوظة' : 'All rights reserved.'}
+            </p>
           </div>
         </div>
       </div>

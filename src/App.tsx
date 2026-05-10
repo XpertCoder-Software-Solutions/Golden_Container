@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="min-h-screen bg-[#07090D] text-white">
       <Navbar />
-      <main className="min-h-[35vh]">
+      <main id="home-section" className="min-h-[35vh]">
         <Home />
       </main>
       <Footer />

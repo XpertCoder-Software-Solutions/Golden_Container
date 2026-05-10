@@ -9,8 +9,52 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+[id$='-section'] {
+  scroll-margin-top: 90px;
+}
+
+@media (min-width: 768px) {
+  [id$='-section'] {
+    scroll-margin-top: 110px;
+  }
+}
+
+@media (min-width: 1024px) {
+  [id$='-section'] {
+    scroll-margin-top: 108px;
+  }
+}
+
 body {
   margin: 0;
   background-color: #fff;
   color: #fff;
+}
+
+@keyframes section3-card-next {
+  0% {
+    opacity: 0;
+    transform: translate3d(38px, 0, 0) scale(0.985);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes section3-card-prev {
+  0% {
+    opacity: 0;
+    transform: translate3d(-38px, 0, 0) scale(0.985);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }

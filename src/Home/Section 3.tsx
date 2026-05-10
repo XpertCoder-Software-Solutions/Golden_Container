@@ -262,14 +262,14 @@ function Section3() {
       <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-8 lg:px-16 xl:px-[100px]">
         <div className="relative mb-5 flex items-center justify-center sm:mb-7 md:mb-8 lg:mb-10">
           <div className="flex items-center justify-center gap-2.5 sm:gap-4 md:gap-6">
-            <span className="h-[3px] w-12 bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-20 md:w-[130px]" />
+            <span className="h-[3px] w-[44px] bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]" />
             <h2
               id="products-heading"
               className={`${sectionTitleGradient} text-center text-[28px] font-extrabold leading-[1.1] sm:text-[32px] md:text-[36px] lg:text-[40px]`}
             >
               {copy.title}
             </h2>
-            <span className="h-[3px] w-12 bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-20 md:w-[130px]" />
+            <span className="h-[3px] w-[44px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]" />
           </div>
 
           <a

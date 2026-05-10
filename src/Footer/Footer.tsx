@@ -157,19 +157,19 @@ const footerCopyByLanguage: Record<Language, {
 const styles = {
   NewsletterText: 'text-[13px] leading-7 text-[#DEDEDE] md:text-[15px] md:leading-8 lg:text-base',
   mutedText: 'text-[13px] leading-7 text-[#DEDEDE] md:text-[15px] md:leading-6 lg:text-[12px]',
-  companySection: 'space-y-12 sm:space-y-6',
+  companySection: 'space-y-7 sm:space-y-6 md:space-y-8',
   sectionHeader: 'space-y-4',
   sectionHeaderCompact: 'space-y-4',
   sectionTitle: 'text-[15px] font-semibold md:text-base lg:text-lg',
   sectionLine: 'block h-1 w-28 bg-gradient-to-l from-[#A96522] to-[#FBEF9D] sm:w-36',
-  navList: 'mt-1.5 space-y-1.5 sm:mt-5 sm:space-y-2',
+  navList: 'mt-3 space-y-2 sm:mt-4 sm:space-y-2.5',
   navLink: 'text-[14px] transition-colors duration-200 hover:text-[#d6ac57] md:text-[15px] lg:text-base',
-  socialList: 'flex flex-wrap justify-center gap-4 pt-1 sm:justify-start sm:gap-5',
+  socialList: 'flex flex-wrap justify-center gap-3.5 pt-1 sm:justify-start sm:gap-5',
   newsletterSection: 'flex h-full flex-col gap-4 sm:gap-5',
   socialLink:
     'grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#A96522] to-[#FBEF9D] text-[15px] text-white transition-transform duration-200 hover:scale-110 sm:h-10 sm:w-10 sm:text-lg',
   contactsGrid:
-    'mt-8 grid w-full gap-x-6 gap-y-4 pt-6 md:mt-10 md:grid-cols-3 md:pt-7 xl:grid-cols-3',
+    'mt-7 grid w-full gap-x-6 gap-y-3 pt-5 sm:mt-8 sm:gap-y-4 sm:pt-6 md:mt-10 md:grid-cols-3 md:pt-7 xl:grid-cols-3',
   contactItem:
     'flex items-start gap-3 text-[13px] text-[#DEDEDE] md:text-[14px] lg:text-[15px] sm:items-center sm:gap-4',
   contactIcon:
@@ -225,11 +225,11 @@ function Footer() {
 
   return (
     <footer
-      className="bg-[#07090D] py-7 sm:py-12 lg:py-[50px]"
+      className="bg-[#07090D] py-8 sm:py-10 md:py-12 lg:py-[50px]"
       dir={isArabic ? 'rtl' : 'ltr'}
       aria-label={copy.footerAriaLabel}
     >
-      <div className="mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]">
+      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-10 lg:px-[100px]">
         <svg className="h-0 w-0" aria-hidden="true" focusable="false">
           <defs>
             <linearGradient
@@ -245,7 +245,7 @@ function Footer() {
           </defs>
         </svg>
 
-        <div className="grid grid-cols-1 gap-y-10 sm:gap-y-12 md:grid-cols-2 md:gap-x-[3.5rem] md:gap-y-12 lg:grid-cols-[minmax(355px,1.2fr)_minmax(220px,0.84fr)_minmax(260px,0.96fr)] lg:gap-x-[6.5rem] lg:gap-y-14">
+        <div className="grid grid-cols-1 gap-y-9 sm:gap-y-10 md:grid-cols-2 md:gap-x-[2.75rem] md:gap-y-10 lg:grid-cols-[minmax(355px,1.2fr)_minmax(220px,0.84fr)_minmax(260px,0.96fr)] lg:gap-x-[6.5rem] lg:gap-y-14">
           <section className={`${styles.companySection} md:col-span-2 lg:col-span-1`}>
             <img
               src={logo}
@@ -304,11 +304,11 @@ function Footer() {
         </address>
 
         <div
-          className={`mt-7 border-t border-[#4d4d4d] pt-7 text-center text-[12px] leading-6 text-[#DEDEDE] sm:text-sm md:text-[15px] md:leading-7 ${
+          className={`mt-6 border-t border-[#4d4d4d] pt-6 text-center text-[12px] leading-6 text-[#DEDEDE] sm:mt-7 sm:pt-7 sm:text-sm md:text-[15px] md:leading-7 ${
             isArabic ? 'lg:text-right' : 'lg:text-left'
           } lg:text-base`}
         >
-          <div className="flex flex-col-reverse items-center gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col-reverse items-center gap-2.5 sm:gap-4 md:flex-row md:items-center md:justify-between">
             <p>
               {copy.designedByPrefix}{' '}
               <a

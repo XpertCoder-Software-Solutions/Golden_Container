@@ -13,7 +13,7 @@ type ContinentCard = {
 }
 
 const goldGradient = 'bg-gradient-to-l from-[#FBEF9D] to-[#A96522]'
-const sectionTitleGradient = `${goldGradient} bg-clip-text text-transparent`
+const sectionTitleGradient = `bg-gradient-to-t from-[#FBEF9D] to-[#A96522] bg-clip-text text-transparent`
 const cardBorderGradient = 'bg-gradient-to-br from-[#FBEF9D] via-[#D39B52] to-[#A96522]'
 const cardBodyGradient = 'bg-[#07090D]'
 const cardFrontGradient = 'bg-gradient-to-br from-[#c18b44] via-[#75461E] to-[#5E3715]'
@@ -215,7 +215,7 @@ function ContinentCardItem({
       }}
     >
       <div
-        className={`relative min-h-[430px] rounded-[8px] ${cardBodyGradient} sm:min-h-[450px] md:h-[430px] md:min-h-0`}
+        className={`relative min-h-[410px] rounded-[8px] ${cardBodyGradient} sm:min-h-[430px] md:h-[430px] md:min-h-0`}
       >
         <div className="flex h-full flex-col p-4 sm:p-5">
           <div className="mb-4 text-center">
@@ -227,7 +227,7 @@ function ContinentCardItem({
         </div>
 
         <div
-          className={`absolute inset-0 z-20 flex h-full flex-col items-center rounded-[8px] ${cardFrontGradient} px-4 py-5 text-white transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${mobileSlideClass} md:px-6 md:py-6 lg:group-hover:-translate-y-full lg:group-focus-within:-translate-y-full`}
+          className={`absolute inset-0 z-20 flex h-full flex-col items-center rounded-[8px] ${cardFrontGradient} px-4 py-5 text-white transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${mobileSlideClass} sm:px-5 sm:py-6 md:px-6 md:py-6 lg:group-hover:-translate-y-full lg:group-focus-within:-translate-y-full`}
         >
           <h3 className="text-2xl font-extrabold">{name}</h3>
 
@@ -263,19 +263,19 @@ function Section5() {
   const copy = sectionCopyByLanguage[language]
 
   return (
-    <section id="markets-section" className="bg-[#07090D] py-10 sm:py-12 lg:py-16" dir={isArabic ? 'rtl' : 'ltr'}>
-      <div className="mx-auto w-full max-w-[1240px] px-4 sm:px-6 lg:px-10 xl:px-14">
-        <div className="mb-8 flex items-center justify-center gap-3 sm:mb-10 sm:gap-4 md:mb-12 md:gap-6">
-          <span className={`h-[3px] w-[52px] ${goldGradient} sm:w-[88px] md:w-[150px]`} />
+    <section id="markets-section" className="bg-[#07090D] py-9 sm:py-11 md:py-14 lg:py-16" dir={isArabic ? 'rtl' : 'ltr'}>
+      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-10 lg:px-[100px]">
+        <div className="mb-7 flex items-center justify-center gap-2.5 sm:mb-9 sm:gap-4 md:mb-12 md:gap-6">
+          <span className={`h-[3px] w-[44px] bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]`} />
           <h2
             className={`${sectionTitleGradient} text-center text-2xl font-extrabold leading-tight sm:text-3xl lg:text-[2.1rem]`}
           >
             {copy.title}
           </h2>
-          <span className={`h-[3px] w-[52px] ${goldGradient} sm:w-[88px] md:w-[150px]`} />
+          <span className={`h-[3px] w-[44px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]`} />
         </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-3 md:gap-4 lg:gap-6">
           {continents.map((continent) => (
             <ContinentCardItem
               key={continent.id}

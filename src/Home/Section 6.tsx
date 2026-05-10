@@ -190,17 +190,17 @@ const messageBaseStyles =
   'min-h-[180px] w-full rounded-[14px] border border-white/15 bg-[#0A0D12] px-4 py-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] transition-all duration-200 focus:border-[#D8A45C] focus:ring-2 focus:ring-[#D8A45C]/20 focus:outline-none sm:min-h-[220px] sm:px-5'
 
 const styles = {
-  section: 'relative overflow-hidden bg-[#07090D] py-10 sm:py-12 md:py-14 lg:py-16',
-  container: 'mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]',
-  headingRow: 'relative z-10 mb-7 flex items-center justify-center gap-3 sm:mb-9 sm:gap-4 md:mb-10 md:gap-7',
-  divider: `h-[3px] w-[56px] ${goldGradientBackground} sm:w-[88px] md:w-[120px]`,
+  section: 'relative overflow-hidden bg-[#07090D] py-9 sm:py-11 md:py-14 lg:py-16',
+  container: 'mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-10 lg:px-[100px]',
+  headingRow: 'relative z-10 mb-7 flex items-center justify-center gap-2.5 sm:mb-9 sm:gap-4 md:mb-10 md:gap-7',
+  divider: `h-[3px] w-[44px] ${goldGradientBackground} sm:w-[88px] md:w-[120px]`,
   heading: `${sectionTitleGradient} text-center text-3xl font-extrabold leading-[1.15] sm:text-4xl`,
   subtitle:
-    'relative z-10 mx-auto mb-8 max-w-[760px] text-center text-sm leading-7 text-[#D3DAE6] sm:mb-10 sm:text-[15px] md:mb-12 md:text-base',
+    'relative z-10 mx-auto mb-7 max-w-[760px] text-center text-sm leading-7 text-[#D3DAE6] sm:mb-9 sm:text-[15px] md:mb-12 md:text-base',
   contentGrid:
-    'relative grid grid-cols-1 gap-4 lg:grid-cols-[minmax(300px,0.88fr)_minmax(0,1.22fr)] lg:gap-5',
+    'relative grid grid-cols-1 gap-4 sm:gap-5 md:gap-6 lg:grid-cols-[minmax(300px,0.88fr)_minmax(0,1.22fr)] lg:gap-5',
   infoCard:
-    'rounded-[20px] border border-[#D4A25F]/35 bg-[linear-gradient(155deg,rgba(41,30,17,0.72),rgba(15,18,24,0.95)_55%,rgba(10,13,18,0.98))] p-6 sm:p-7',
+    'rounded-[20px] border border-[#D4A25F]/35 bg-[linear-gradient(155deg,rgba(41,30,17,0.72),rgba(15,18,24,0.95)_55%,rgba(10,13,18,0.98))] p-5 sm:p-6 md:p-7',
   infoLabel:
     'inline-flex rounded-full border border-[#E3B36E]/55 bg-[#17140F] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#F0CE96]',
   infoList: 'mt-6 space-y-3',
@@ -216,7 +216,7 @@ const styles = {
   socialLink:
     'grid h-10 w-10 place-items-center rounded-full border border-[#E0B377] bg-[#090C11] text-[#F1D089] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F4D8A2] hover:text-[#FFE5B5]',
   formCard:
-    'rounded-[20px] border border-white/10 bg-[linear-gradient(160deg,rgba(16,20,27,0.95),rgba(9,12,17,0.99))] p-5 sm:p-6 md:p-7',
+    'rounded-[20px] border border-white/10 bg-[linear-gradient(160deg,rgba(16,20,27,0.95),rgba(9,12,17,0.99))] p-4 sm:p-6 md:p-7',
   tagsRow: 'mt-4 flex flex-wrap gap-2.5',
   tag:
     'inline-flex items-center gap-1.5 rounded-full border border-[#C68A42] bg-[#14120F] px-3 py-1.5 text-xs font-medium text-[#F4D9A4]',
@@ -351,10 +351,8 @@ function Section6() {
           <h2 id="contact-section-heading" className={styles.heading}>
             {copy.title}
           </h2>
-          <span className="h-[3px] w-[56px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]" />
+          <span className="h-[3px] w-[44px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]" />
         </div>
-
-        <p className={styles.subtitle}>{copy.subtitle}</p>
 
         <div className={styles.contentGrid}>
           <aside

@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import africaMap from '../assets/Africa Map.png'
-import asiaMap from '../assets/Asia Map.png'
-import europeMap from '../assets/Europe Map.png'
+import africaMap from '../assets/Africa Map.webp'
+import asiaMap from '../assets/Asia Map.webp'
+import europeMap from '../assets/Europe Map.webp'
 import { useLanguage, type Language } from '../i18n/language'
 
 type ContinentCard = {
@@ -184,6 +184,7 @@ type ContinentCardItemProps = ContinentCard & {
   tapToShowCountries: string
   cardAriaPrefix: string
   mapAltPrefix: string
+  revealDelayClass: string
 }
 
 function ContinentCardItem({
@@ -196,6 +197,7 @@ function ContinentCardItem({
   tapToShowCountries,
   cardAriaPrefix,
   mapAltPrefix,
+  revealDelayClass,
 }: ContinentCardItemProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const mobileSlideClass = isMobileOpen ? '-translate-y-full lg:translate-y-0' : 'translate-y-0'
@@ -203,7 +205,8 @@ function ContinentCardItem({
 
   return (
     <article
-      className={`group relative isolate cursor-pointer overflow-hidden rounded-[8px] ${cardBorderGradient} p-px shadow-[0_14px_35px_rgba(0,0,0,0.3)] md:cursor-default`}
+      data-reveal="up"
+      className={`premium-card-hover ${revealDelayClass} z-10 group relative isolate cursor-pointer overflow-hidden rounded-[8px] ${cardBorderGradient} p-px shadow-[0_14px_35px_rgba(0,0,0,0.3)] md:cursor-default`}
       tabIndex={0}
       aria-label={`${cardAriaPrefix} ${name}`}
       onClick={handleCardToggle}
@@ -215,9 +218,9 @@ function ContinentCardItem({
       }}
     >
       <div
-        className={`relative min-h-[410px] rounded-[8px] ${cardBodyGradient} sm:min-h-[430px] md:h-[430px] md:min-h-0`}
+        className={`z-10 relative min-h-[410px] rounded-[8px] ${cardBodyGradient} sm:min-h-[430px] md:h-[430px] md:min-h-0`}
       >
-        <div className="flex h-full flex-col p-4 sm:p-5">
+        <div className="z-10 flex h-full flex-col p-4 sm:p-5">
           <div className="mb-4 text-center">
             <h3 className={`${sectionTitleGradient} text-2xl font-extrabold`}>{name}</h3>
             <p className="mt-2 text-sm text-[#D5D5D5]">{countriesInsideContinent}</p>
@@ -227,7 +230,7 @@ function ContinentCardItem({
         </div>
 
         <div
-          className={`absolute inset-0 z-20 flex h-full flex-col items-center rounded-[8px] ${cardFrontGradient} px-4 py-5 text-white transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${mobileSlideClass} sm:px-5 sm:py-6 md:px-6 md:py-6 lg:group-hover:-translate-y-full lg:group-focus-within:-translate-y-full`}
+          className={`z-10 absolute inset-0 z-20 flex h-full flex-col items-center rounded-[8px] ${cardFrontGradient} px-4 py-5 text-white transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${mobileSlideClass} sm:px-5 sm:py-6 md:px-6 md:py-6 lg:group-hover:-translate-y-full lg:group-focus-within:-translate-y-full`}
         >
           <h3 className="text-2xl font-extrabold">{name}</h3>
 
@@ -235,8 +238,9 @@ function ContinentCardItem({
             <img
               src={mapImage}
               alt={`${mapAltPrefix} ${name}`}
-              className={`h-[145px] w-full object-contain drop-shadow-[0_12px_24px_rgba(0,0,0,0.4)] sm:h-[160px] md:h-[175px] ${mapImageClassName ?? ''}`}
+              className={`premium-float-soft h-[145px] w-full object-contain drop-shadow-[0_12px_24px_rgba(0,0,0,0.4)] sm:h-[160px] md:h-[175px] ${mapImageClassName ?? ''}`}
               loading="lazy"
+              decoding="async"
             />
           </div>
 
@@ -263,20 +267,20 @@ function Section5() {
   const copy = sectionCopyByLanguage[language]
 
   return (
-    <section id="markets-section" className="bg-[#07090D] py-9 sm:py-11 md:py-14 lg:py-16" dir={isArabic ? 'rtl' : 'ltr'}>
+    <section id="markets-section" className="z-10 bg-[#07090D] py-9 sm:py-11 md:py-14 lg:py-16" dir={isArabic ? 'rtl' : 'ltr'}>
       <div className="mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]">
-        <div className="mb-7 flex items-center justify-center gap-2.5 sm:mb-9 sm:gap-4 md:mb-12 md:gap-6">
-          <span className={`h-[3px] w-[44px] bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]`} />
+        <div data-reveal="up" className="mb-7 flex items-center justify-center gap-2.5 sm:mb-9 sm:gap-4 md:mb-12 md:gap-6">
+          <span className={`premium-shimmer-line h-[3px] w-[44px] bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]`} />
           <h2
             className={`${sectionTitleGradient} text-center text-2xl font-extrabold leading-tight sm:text-3xl lg:text-[2.1rem]`}
           >
             {copy.title}
           </h2>
-          <span className={`h-[3px] w-[44px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]`} />
+          <span className={`premium-shimmer-line h-[3px] w-[44px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]`} />
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-3 md:gap-4 lg:gap-6">
-          {continents.map((continent) => (
+        <div className="z-10 grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-3 md:gap-4 lg:gap-6">
+          {continents.map((continent, index) => (
             <ContinentCardItem
               key={continent.id}
               {...continent}
@@ -285,6 +289,7 @@ function Section5() {
               tapToShowCountries={copy.tapToShowCountries}
               cardAriaPrefix={copy.cardAriaPrefix}
               mapAltPrefix={copy.mapAltPrefix}
+              revealDelayClass={index === 0 ? 'reveal-delay-1' : index === 1 ? 'reveal-delay-2' : 'reveal-delay-3'}
             />
           ))}
         </div>

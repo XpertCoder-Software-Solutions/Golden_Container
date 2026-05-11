@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FiMenu, FiX } from 'react-icons/fi'
 import { LuPhoneCall } from 'react-icons/lu'
 import { MdTranslate } from 'react-icons/md'
-import logo from '../assets/Logo.png'
+import logo from '../assets/Logo.webp'
 import { useLanguage, type Language } from '../i18n/language'
 
 type NavItem = {
@@ -60,9 +60,10 @@ const mobileMenuToggleLabelByLanguage: Record<Language, string> = {
 const contactLink = '#contact-section'
 
 const styles = {
-  headerBase: 'sticky top-2 z-50 text-[14px] md:top-3 md:text-[15px] lg:text-base transition-[padding,background-color] duration-500',
+  headerBase:
+    'fixed left-0 right-0 top-2 z-50 text-[14px] md:top-4 md:text-[15px] lg:text-base transition-[padding,background-color] duration-500',
   headerAtTop:
-    'bg-gradient-to-b from-[#05070D]/90 via-[#05070D]/58 to-transparent pb-2 pt-2 sm:pt-3',
+    '',
   headerScrolled:
     '',
   navContainer: 'relative mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]',
@@ -138,7 +139,8 @@ function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeHref, setActiveHref] = useState<string | null>('#home-section')
-  const [isContactSectionReached, setIsContactSectionReached] = useState(false)
+  const isScrolledRef = useRef(false)
+  const activeHrefRef = useRef<string | null>('#home-section')
   const { language, isArabic, toggleLanguage } = useLanguage()
   const mobileMenuId = 'main-navigation-mobile'
 
@@ -148,81 +150,86 @@ function Navbar() {
   const languageToggleAriaLabel = isArabic ? 'التبديل إلى الإنجليزية' : 'Switch to Arabic'
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 18)
+    activeHrefRef.current = activeHref
+  }, [activeHref])
 
-      const contactSection = document.querySelector<HTMLElement>(contactLink)
+  useEffect(() => {
+    isScrolledRef.current = isScrolled
+  }, [isScrolled])
+
+  useEffect(() => {
+    const sections = navItems
+      .map(({ href }) => document.querySelector<HTMLElement>(href))
+      .filter((section): section is HTMLElement => section !== null)
+
+    const contactSection = document.querySelector<HTMLElement>(contactLink)
+    let rafId: number | null = null
+
+    const updateScrollState = () => {
+      const nextScrolledState = window.scrollY > 18
+      if (nextScrolledState !== isScrolledRef.current) {
+        isScrolledRef.current = nextScrolledState
+        setIsScrolled(nextScrolledState)
+      }
 
       if (contactSection) {
         const contactTriggerPoint = window.innerHeight * 0.52
         const hasReachedContact = contactSection.getBoundingClientRect().top <= contactTriggerPoint
 
-        setIsContactSectionReached(hasReachedContact)
-
         if (hasReachedContact) {
-          setActiveHref(null)
+          if (activeHrefRef.current !== null) {
+            activeHrefRef.current = null
+            setActiveHref(null)
+          }
+
           return
         }
       }
 
-      if (window.scrollY < 40) {
-        setActiveHref('#home-section')
+      const activationLine = 130
+      let nextActiveHref = '#home-section'
+
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= activationLine) {
+          nextActiveHref = `#${section.id}`
+        }
+      }
+
+      if (nextActiveHref !== activeHrefRef.current) {
+        activeHrefRef.current = nextActiveHref
+        setActiveHref(nextActiveHref)
       }
     }
 
-    handleScroll()
+    const handleScroll = () => {
+      if (rafId !== null) return
+
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null
+        updateScrollState()
+      })
+    }
+
+    updateScrollState()
     window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
+
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId)
+      }
     }
-  }, [])
-
-  useEffect(() => {
-    if (isContactSectionReached) {
-      return
-    }
-
-    const sections = navItems
-      .map(({ href }) => document.querySelector<HTMLElement>(href))
-      .filter((section): section is HTMLElement => section !== null)
-
-    if (sections.length === 0) {
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleSections = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-
-        if (visibleSections.length === 0) {
-          return
-        }
-
-        setActiveHref(`#${visibleSections[0].target.id}`)
-      },
-      {
-        root: null,
-        rootMargin: '-35% 0px -50% 0px',
-        threshold: [0.15, 0.35, 0.65],
-      },
-    )
-
-    sections.forEach((section) => observer.observe(section))
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [isContactSectionReached, navItems])
+  }, [navItems])
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false)
   }
 
   const handleNavItemClick = (href: string) => {
-    setIsContactSectionReached(false)
+    activeHrefRef.current = href
     setActiveHref(href)
     closeMobileMenu()
   }
@@ -254,6 +261,8 @@ function Navbar() {
               src={logo}
               alt="Golden Container"
               className={`${styles.logo} ${isScrolled ? styles.logoScrolled : styles.logoAtTop}`}
+              decoding="async"
+              fetchPriority="high"
             />
           </a>
 

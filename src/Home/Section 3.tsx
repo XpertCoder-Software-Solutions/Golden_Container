@@ -19,10 +19,10 @@ import {
   FiWind,
   FiZap,
 } from 'react-icons/fi'
-import coalImage from '../assets/Coal.png'
-import coalPackageImage from '../assets/Coal Package.png'
-import packagingImage from '../assets/Packaging.png'
-import exportingImage from '../assets/Exporting.png'
+import coalImage from '../assets/Coal.webp'
+import coalPackageImage from '../assets/Coal Package.webp'
+import packagingImage from '../assets/Packaging.webp'
+import exportingImage from '../assets/Exporting.webp'
 import { useLanguage, type Language } from '../i18n/language'
 
 type ProductSpec = {
@@ -254,33 +254,34 @@ function Section3() {
 
   return (
     <section
-      className="relative overflow-hidden bg-[#07090D] py-7 sm:py-9 md:py-10 lg:py-14 xl:py-16"
+      className="relative overflow-visible bg-[#07090D] py-7 sm:py-9 md:py-10 lg:py-14 xl:py-16"
       dir={isArabic ? 'rtl' : 'ltr'}
       aria-labelledby="products-heading"
       id="products-section"
     >
       <div className="mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]">
-        <div className="relative mb-5 flex items-center justify-center sm:mb-7 md:mb-8 lg:mb-10">
+        <div data-reveal="up" className="relative mb-5 flex items-center justify-center sm:mb-7 md:mb-8 lg:mb-10">
           <div className="flex items-center justify-center gap-2.5 sm:gap-4 md:gap-6">
-            <span className="h-[3px] w-[44px] bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]" />
+            <span className="premium-shimmer-line h-[3px] w-[44px] bg-gradient-to-l from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]" />
             <h2
               id="products-heading"
               className={`${sectionTitleGradient} text-center text-[28px] font-extrabold leading-[1.1] sm:text-[32px] md:text-[36px] lg:text-[40px]`}
             >
               {copy.title}
             </h2>
-            <span className="h-[3px] w-[44px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]" />
+            <span className="premium-shimmer-line h-[3px] w-[44px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]" />
           </div>
 
           <a
             href="#"
+            data-reveal={isArabic ? 'left' : 'right'}
             className={`absolute hidden items-center justify-center rounded-full border border-[#D39B52] bg-[#0A0D13] px-5 py-2.5 text-[13px] font-semibold text-[#F6F7F9] transition-all duration-300 hover:bg-gradient-to-l hover:from-[#FBEF9D] hover:to-[#A96522] hover:text-white lg:inline-flex ${isArabic ? 'left-0' : 'right-0'}`}
           >
             {copy.viewAllProducts}
           </a>
         </div>
 
-        <div className="mb-5 flex justify-center lg:hidden">
+        <div data-reveal="up" className="mb-5 flex justify-center lg:hidden">
           <a
             href="#"
             className="inline-flex items-center justify-center rounded-full border border-[#D39B52] bg-[#0A0D13] px-4 py-2 text-[11px] font-semibold text-[#F6F7F9] transition-all duration-300 hover:bg-gradient-to-l hover:from-[#FBEF9D] hover:to-[#A96522] hover:text-white sm:px-5 sm:py-2.5 sm:text-[13px] md:px-6 md:py-2.5 md:text-[13px]"
@@ -291,7 +292,8 @@ function Section3() {
 
         <article
           key={activeProduct.id}
-          className={`group mx-auto w-full max-w-[1440px] overflow-hidden rounded-[14px] border border-[#B9782F66] bg-[#080B10] shadow-[0_14px_34px_rgba(0,0,0,0.34)] sm:rounded-[18px] ${cardAnimationClass}`}
+          data-reveal="zoom"
+          className={`premium-card-hover relative z-30 group mx-auto w-full max-w-[1440px] overflow-hidden rounded-[14px] border border-[#B9782F66] bg-[#080B10] shadow-[0_14px_34px_rgba(0,0,0,0.34)] sm:rounded-[18px] ${cardAnimationClass}`}
         >
           <div className="relative p-2.5 sm:p-3.5 md:p-4 lg:p-5">
             <span
@@ -322,6 +324,7 @@ function Section3() {
                   alt={activeProduct.title}
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   loading="lazy"
+                  decoding="async"
                 />
                 <span
                   className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent"
@@ -351,7 +354,7 @@ function Section3() {
 
                     <div className="grid grid-cols-2 gap-2 md:gap-2.5">
                       {activeProduct.specs.map(({ id, icon: Icon, title, description }) => (
-                        <div key={id} className="rounded-[10px] border border-[#FFFFFF18] bg-[#FFFFFF08] p-2.5 sm:p-2.5 md:p-3 lg:p-3">
+                        <div key={id} className="premium-card-hover rounded-[10px] border border-[#FFFFFF18] bg-[#FFFFFF08] p-2.5 sm:p-2.5 md:p-3 lg:p-3">
                           <div className="mb-1.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#E0B46824] text-[#EAC170] sm:h-7 sm:w-7 lg:h-6 lg:w-6">
                             <Icon className="text-[13px] sm:text-[14px] lg:text-[13px]" />
                           </div>
@@ -453,7 +456,7 @@ function Section3() {
           </div>
         </article>
 
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 sm:mt-6 sm:gap-3 md:mt-6 lg:mt-5">
+        <div data-reveal="up" className="mt-5 flex flex-wrap items-center justify-center gap-2.5 sm:mt-6 sm:gap-3 md:mt-6 lg:mt-5">
           <button
             type="button"
             onClick={showPrevious}

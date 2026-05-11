@@ -31,6 +31,9 @@ type ContactFormField = {
   type: 'text' | 'tel' | 'email'
   placeholder: string
   autoComplete?: string
+  maxLength?: number
+  inputMode?: 'text' | 'tel' | 'email'
+  pattern?: string
 }
 
 const contactInfoByLanguage: Record<Language, ContactInfoItem[]> = {
@@ -97,6 +100,8 @@ const contactFormFieldsByLanguage: Record<Language, ContactFormField[]> = {
       type: 'text',
       placeholder: 'Full Name',
       autoComplete: 'name',
+      maxLength: 120,
+      inputMode: 'text',
     },
     {
       id: 'contact-phone',
@@ -104,12 +109,17 @@ const contactFormFieldsByLanguage: Record<Language, ContactFormField[]> = {
       type: 'tel',
       placeholder: 'Phone Number',
       autoComplete: 'tel',
+      maxLength: 20,
+      inputMode: 'tel',
+      pattern: '^\\+?[0-9\\s()\\-]{7,20}$',
     },
     {
       id: 'contact-subject',
       name: 'subject',
       type: 'text',
       placeholder: 'Subject',
+      maxLength: 180,
+      inputMode: 'text',
     },
   ],
   ar: [
@@ -119,6 +129,8 @@ const contactFormFieldsByLanguage: Record<Language, ContactFormField[]> = {
       type: 'text',
       placeholder: 'الاسم بالكامل',
       autoComplete: 'name',
+      maxLength: 120,
+      inputMode: 'text',
     },
     {
       id: 'contact-phone',
@@ -126,12 +138,17 @@ const contactFormFieldsByLanguage: Record<Language, ContactFormField[]> = {
       type: 'tel',
       placeholder: 'رقم الهاتف',
       autoComplete: 'tel',
+      maxLength: 20,
+      inputMode: 'tel',
+      pattern: '^\\+?[0-9\\s()\\-]{7,20}$',
     },
     {
       id: 'contact-subject',
       name: 'subject',
       type: 'text',
       placeholder: 'الموضوع',
+      maxLength: 180,
+      inputMode: 'text',
     },
   ],
 }
@@ -190,8 +207,8 @@ const messageBaseStyles =
   'min-h-[180px] w-full rounded-[14px] border border-white/15 bg-[#0A0D12] px-4 py-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] transition-all duration-200 focus:border-[#D8A45C] focus:ring-2 focus:ring-[#D8A45C]/20 focus:outline-none sm:min-h-[220px] sm:px-5'
 
 const styles = {
-  section: 'relative overflow-hidden bg-[#07090D] py-9 sm:py-11 md:py-14 lg:py-16',
-  container: 'mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]',
+  section: 'relative overflow-x-clip overflow-y-visible bg-[#07090D] sm:py-11 md:py-14 lg:py-16',
+  container: 'relative z-10 mx-auto w-full max-w-[1440px] px-[25px] md:px-[50px] lg:px-[100px]',
   headingRow: 'relative z-10 mb-7 flex items-center justify-center gap-2.5 sm:mb-9 sm:gap-4 md:mb-10 md:gap-7',
   divider: `h-[3px] w-[44px] ${goldGradientBackground} sm:w-[88px] md:w-[120px]`,
   heading: `${sectionTitleGradient} text-center text-3xl font-extrabold leading-[1.15] sm:text-4xl`,
@@ -214,9 +231,9 @@ const styles = {
     `grid h-9 w-9 shrink-0 place-items-center rounded-full ${goldGradientBackground} text-[#0A0B0F]`,
   socialRow: 'mt-5 flex flex-wrap items-center gap-3',
   socialLink:
-    'grid h-10 w-10 place-items-center rounded-full border border-[#E0B377] bg-[#090C11] text-[#F1D089] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F4D8A2] hover:text-[#FFE5B5]',
+    'premium-card-hover grid h-10 w-10 place-items-center rounded-full border border-[#E0B377] bg-[#090C11] text-[#F1D089] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F4D8A2] hover:text-[#FFE5B5]',
   formCard:
-    'rounded-[20px] border border-white/10 bg-[linear-gradient(160deg,rgba(16,20,27,0.95),rgba(9,12,17,0.99))] p-4 sm:p-6 md:p-7',
+    'premium-card-hover rounded-[20px] border border-white/10 bg-[linear-gradient(160deg,rgba(16,20,27,0.95),rgba(9,12,17,0.99))] p-4 sm:p-6 md:p-7',
   tagsRow: 'mt-4 flex flex-wrap gap-2.5',
   tag:
     'inline-flex items-center gap-1.5 rounded-full border border-[#C68A42] bg-[#14120F] px-3 py-1.5 text-xs font-medium text-[#F4D9A4]',
@@ -227,6 +244,7 @@ const styles = {
 } as const
 
 const isPhoneLink = (href: string) => href.startsWith('tel:')
+const isExternalLink = (href: string) => /^https?:\/\//i.test(href)
 
 type ContactInfoListProps = {
   contactInfo: ContactInfoItem[]
@@ -244,9 +262,10 @@ function ContactInfoList({ contactInfo }: ContactInfoListProps) {
           {href ? (
             <a
               href={href}
-              className="leading-relaxed text-[#F7F7FA] transition-colors duration-200 hover:text-[#F8DFAE]"
+              className={`leading-relaxed text-[#F7F7FA] transition-colors duration-200 hover:text-[#F8DFAE] ${
+                isPhoneLink(href) ? 'bidi-plaintext' : ''
+              }`}
               dir={isPhoneLink(href) ? 'ltr' : undefined}
-              style={isPhoneLink(href) ? { unicodeBidi: 'plaintext' } : undefined}
             >
               {label}
             </a>
@@ -266,11 +285,23 @@ type SocialLinksListProps = {
 function SocialLinksList({ socialLinks }: SocialLinksListProps) {
   return (
     <div className={styles.socialRow}>
-      {socialLinks.map(({ id, icon: Icon, label, href }) => (
-        <a key={id} href={href} aria-label={label} className={styles.socialLink}>
-          <Icon aria-hidden="true" />
-        </a>
-      ))}
+      {socialLinks.map(({ id, icon: Icon, label, href }) => {
+        const external = isExternalLink(href)
+
+        return (
+          <a
+            key={id}
+            href={href}
+            aria-label={label}
+            className={styles.socialLink}
+            target={external ? '_blank' : undefined}
+            rel={external ? 'noopener noreferrer nofollow' : undefined}
+            referrerPolicy={external ? 'no-referrer' : undefined}
+          >
+            <Icon aria-hidden="true" />
+          </a>
+        )
+      })}
     </div>
   )
 }
@@ -294,7 +325,7 @@ function ContactForm({
   return (
     <form className={styles.form} onSubmit={(event) => event.preventDefault()} noValidate>
       <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
-        {contactFormFields.map(({ id, name, type, placeholder, autoComplete }) => (
+        {contactFormFields.map(({ id, name, type, placeholder, autoComplete, maxLength, inputMode, pattern }) => (
           <div key={id} className={name === 'subject' ? 'md:col-span-2' : ''}>
             <label htmlFor={id} className="sr-only">
               {placeholder}
@@ -305,6 +336,9 @@ function ContactForm({
               type={type}
               placeholder={placeholder}
               autoComplete={autoComplete}
+              maxLength={maxLength}
+              inputMode={inputMode}
+              pattern={pattern}
               className={fieldStyles}
             />
           </div>
@@ -318,6 +352,7 @@ function ContactForm({
             id="contact-message"
             name="message"
             placeholder={messageLabel}
+            maxLength={2500}
             className={messageStyles}
           />
         </div>
@@ -337,6 +372,12 @@ function Section6() {
   const socialLinks = socialLinksByLanguage[language]
   const contactFormFields = contactFormFieldsByLanguage[language]
   const copy = sectionCopyByLanguage[language]
+  const bottomGlowPositionClass = isArabic
+    ? '-bottom-40 -left-28 sm:-bottom-44 sm:-left-36'
+    : '-bottom-40 -right-28 sm:-bottom-44 sm:-right-36'
+  const topGlowPositionClass = isArabic
+    ? '-top-80 -right-28 sm:-top-44 sm:-right-36'
+    : '-top-80 -left-28 sm:-top-44 sm:-left-36'
 
   return (
     <section
@@ -345,18 +386,31 @@ function Section6() {
       dir={isArabic ? 'rtl' : 'ltr'}
       aria-labelledby="contact-section-heading"
     >
+      <span
+        className={`pointer-events-none absolute z-0 h-[360px] w-[360px] premium-glow-breathe rounded-full bg-[radial-gradient(circle_at_center,rgba(251,239,157,0.42)_0%,rgba(211,155,82,0.3)_38%,rgba(169,101,34,0.14)_62%,transparent_80%)] blur-[100px] sm:h-[470px] sm:w-[470px] ${bottomGlowPositionClass}`}
+        aria-hidden="true"
+      />
+      <span
+        className={`pointer-events-none absolute z-0 h-[360px] w-[360px] premium-glow-breathe rounded-full bg-[radial-gradient(circle_at_center,rgba(251,239,157,0.42)_0%,rgba(211,155,82,0.3)_38%,rgba(169,101,34,0.14)_62%,transparent_80%)] blur-[100px] sm:h-[470px] sm:w-[470px] ${topGlowPositionClass}`}
+        aria-hidden="true"
+      />
       <div className={styles.container}>
-        <div className={styles.headingRow}>
-          <span className={styles.divider} />
+        <div data-reveal="up" className={styles.headingRow}>
+          <span className={`${styles.divider} premium-shimmer-line`} />
           <h2 id="contact-section-heading" className={styles.heading}>
             {copy.title}
           </h2>
-          <span className="h-[3px] w-[44px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]" />
+          <span className="premium-shimmer-line h-[3px] w-[44px] bg-gradient-to-r from-[#FBEF9D] to-[#A96522] sm:w-[88px] md:w-[120px]" />
         </div>
+
+        <p data-reveal="up" className={`${styles.subtitle} reveal-delay-1`}>
+          {copy.subtitle}
+        </p>
 
         <div className={styles.contentGrid}>
           <aside
-            className={`${styles.infoCard} ${isArabic ? 'text-right' : 'text-left'}`}
+            data-reveal={isArabic ? 'right' : 'left'}
+            className={`${styles.infoCard} premium-card-hover ${isArabic ? 'text-right' : 'text-left'}`}
             aria-label={copy.contactAriaLabel}
           >
             <h3 className=" text-[22px] font-bold text-[#F8F9FC] sm:text-[26px]">
@@ -372,7 +426,7 @@ function Section6() {
             <SocialLinksList socialLinks={socialLinks} />
           </aside>
 
-          <div className={`${styles.formCard} ${isArabic ? 'text-right' : 'text-left'}`}>
+          <div data-reveal={isArabic ? 'left' : 'right'} className={`${styles.formCard} ${isArabic ? 'text-right' : 'text-left'}`}>
             <h3 className="text-[22px] font-bold text-[#F8F9FC] sm:text-[26px]">{copy.formTitle}</h3>
             <p className="mt-3 text-sm leading-7 text-[#D4DBE8]">{copy.formDescription}</p>
 

@@ -1,0 +1,18 @@
+{
+  "name": "Golden Container",
+  "short_name": "Golden Container",
+  "description": "Premium Egyptian charcoal export solutions for global markets.",
+  "lang": "en",
+  "start_url": "/en",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07090D",
+  "theme_color": "#07090D",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

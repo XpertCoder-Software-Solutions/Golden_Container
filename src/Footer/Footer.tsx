@@ -8,7 +8,7 @@ import {
   FaPhoneAlt,
 } from 'react-icons/fa'
 import type { IconType } from 'react-icons'
-import logo from '../assets/Logo.png'
+import logo from '../assets/Logo.webp'
 import { useLanguage, type Language } from '../i18n/language'
 
 type FooterLink = {
@@ -180,6 +180,7 @@ const styles = {
 } as const
 
 const isPhoneLink = (href: string) => href.startsWith('tel:')
+const isExternalLink = (href: string) => /^https?:\/\//i.test(href)
 
 function SectionHeader({ title }: { title: string }) {
   return (
@@ -251,6 +252,8 @@ function Footer() {
               src={logo}
               alt="Golden Container"
               className="h-[110px] w-[110px] object-contain sm:h-[132px] sm:w-[132px] md:h-[145px] md:w-[145px]"
+              loading="lazy"
+              decoding="async"
             />
 
             <p className={styles.mutedText}>{companyDescription}</p>
@@ -266,16 +269,23 @@ function Footer() {
             <p className={styles.NewsletterText}>{newsletterDescription}</p>
 
             <div className={styles.socialList}>
-              {orderedSocialLinks.map(({ icon: Icon, label, href }) => (
+              {orderedSocialLinks.map(({ icon: Icon, label, href }) => {
+                const external = isExternalLink(href)
+
+                return (
                 <a
                   key={label}
                   href={href}
                   aria-label={label}
                   className={styles.socialLink}
+                  target={external ? '_blank' : undefined}
+                  rel={external ? 'noopener noreferrer nofollow' : undefined}
+                  referrerPolicy={external ? 'no-referrer' : undefined}
                 >
                   <Icon />
                 </a>
-              ))}
+                )
+              })}
             </div>
           </section>
         </div>
@@ -284,15 +294,14 @@ function Footer() {
           {contacts.map(({ id, icon: Icon, text, href }) => (
             <div key={id} className={styles.contactItem}>
               <span className={styles.contactIcon}>
-                <Icon style={{ fill: `url(#${contactIconGradientId})` }} />
+                <Icon fill={`url(#${contactIconGradientId})`} />
               </span>
 
               {href ? (
                 <a
                   href={href}
-                  className={styles.contactInteractive}
+                  className={`${styles.contactInteractive} ${isPhoneLink(href) ? 'bidi-plaintext' : ''}`}
                   dir={isPhoneLink(href) ? 'ltr' : undefined}
-                  style={isPhoneLink(href) ? { unicodeBidi: 'plaintext' } : undefined}
                 >
                   {text}
                 </a>
@@ -314,7 +323,8 @@ function Footer() {
               <a
                 href="https://xpertcodersolutions.com"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer nofollow"
+                referrerPolicy="no-referrer"
                 className="inline-block bg-gradient-to-t from-[#FBEF9D] to-[#A96522] bg-clip-text text-transparent transition-all duration-200 hover:from-[#d6ac57] hover:to-[#FBEF9D]"
               >
                 XpertCoder Software Solutions

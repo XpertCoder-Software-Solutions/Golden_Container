@@ -9,6 +9,9 @@ import {
   FaPaperPlane,
 } from 'react-icons/fa'
 import type { IconType } from 'react-icons'
+import { useState, type FormEvent } from 'react'
+import Swal from 'sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 import { useLanguage, type Language } from '../i18n/language'
 
 type ContactInfoItem = {
@@ -34,6 +37,10 @@ type ContactFormField = {
   maxLength?: number
   inputMode?: 'text' | 'tel' | 'email'
   pattern?: string
+}
+
+type ContactApiResponse = {
+  message?: string
 }
 
 const contactInfoByLanguage: Record<Language, ContactInfoItem[]> = {
@@ -165,6 +172,10 @@ const sectionCopyByLanguage: Record<
     formDescription: string
     message: string
     submit: string
+    sending: string
+    success: string
+    error: string
+    required: string
     supportLabel: string
     contactAriaLabel: string
   }
@@ -180,6 +191,10 @@ const sectionCopyByLanguage: Record<
     formDescription: 'Leave your details and our sales team will prepare a custom quotation for your business.',
     message: 'Message',
     submit: 'Send Request Now',
+    sending: 'Sending...',
+    success: 'Your message has been sent successfully.',
+    error: 'Something went wrong. Please try again.',
+    required: 'Please complete all fields before sending.',
     supportLabel: 'Priority Support',
     contactAriaLabel: 'Contact information',
   },
@@ -194,6 +209,10 @@ const sectionCopyByLanguage: Record<
     formDescription: 'اترك بياناتك وسيقوم فريق المبيعات بإعداد عرض سعر مناسب لطبيعة نشاطك.',
     message: 'الرسالة',
     submit: 'إرسال الطلب الآن',
+    sending: 'جاري الإرسال...',
+    success: 'تم إرسال رسالتك بنجاح.',
+    error: 'حدث خطأ أثناء الإرسال. حاول مرة أخرى.',
+    required: 'يرجى استكمال كل الحقول قبل الإرسال.',
     supportLabel: 'دعم أولوية',
     contactAriaLabel: 'معلومات التواصل',
   },
@@ -205,6 +224,7 @@ const fieldBaseStyles =
   'h-[54px] w-full rounded-[14px] border border-white/15 bg-[#0A0D12] px-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] transition-all duration-200 focus:border-[#D8A45C] focus:ring-2 focus:ring-[#D8A45C]/20 focus:outline-none sm:h-[58px] sm:px-5'
 const messageBaseStyles =
   'min-h-[180px] w-full rounded-[14px] border border-white/15 bg-[#0A0D12] px-4 py-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] transition-all duration-200 focus:border-[#D8A45C] focus:ring-2 focus:ring-[#D8A45C]/20 focus:outline-none sm:min-h-[220px] sm:px-5'
+const messagesApiUrl = `${((import.meta.env.VITE_API_BASE_URL as string | "http://127.0.0.1:8000")?.trim() ?? '').replace(/\/$/, '')}/api/messages`
 
 const styles = {
   section: 'relative overflow-x-clip overflow-y-visible bg-[#07090D] sm:py-11 md:py-14 lg:py-16',
@@ -240,11 +260,27 @@ const styles = {
   form: 'mt-6',
   submitButton:
     `mt-6 inline-flex w-full items-center justify-center gap-2 rounded-[14px] ${goldGradientBackground} px-7 py-3.5 text-sm font-semibold text-[#FFFFFF] transition-transform duration-200 hover:-translate-y-0.5 sm:w-auto sm:text-base`,
-  responseRow: 'mt-4 flex items-center gap-2 text-sm text-[#D5DCEA]',
 } as const
 
 const isPhoneLink = (href: string) => href.startsWith('tel:')
 const isExternalLink = (href: string) => /^https?:\/\//i.test(href)
+const arabicCharactersPattern = /[\u0600-\u06FF]/
+const getApiMessage = (payload: unknown) => {
+  if (!payload || typeof payload !== 'object') {
+    return null
+  }
+
+  const message = (payload as ContactApiResponse).message
+
+  if (typeof message !== 'string') {
+    return null
+  }
+
+  const normalizedMessage = message.trim()
+  return normalizedMessage.length > 0 ? normalizedMessage : null
+}
+const matchesLanguageDirection = (text: string, useArabic: boolean) =>
+  useArabic ? arabicCharactersPattern.test(text) : !arabicCharactersPattern.test(text)
 
 type ContactInfoListProps = {
   contactInfo: ContactInfoItem[]
@@ -310,20 +346,130 @@ type ContactFormProps = {
   contactFormFields: ContactFormField[]
   messageLabel: string
   submitLabel: string
+  sendingLabel: string
+  successMessage: string
+  errorMessage: string
+  requiredMessage: string
   isArabic: boolean
 }
+
+type AlertType = 'success' | 'error'
 
 function ContactForm({
   contactFormFields,
   messageLabel,
   submitLabel,
+  sendingLabel,
+  successMessage,
+  errorMessage,
+  requiredMessage,
   isArabic,
 }: ContactFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const fieldStyles = `${fieldBaseStyles} ${isArabic ? 'text-right' : 'text-left'}`
   const messageStyles = `${messageBaseStyles} ${isArabic ? 'text-right' : 'text-left'}`
+  const showAlert = (type: AlertType, text: string) => {
+    void Swal.fire({
+      icon: type,
+      title: type === 'success' ? (isArabic ? 'تم الإرسال' : 'Request Sent') : isArabic ? 'تنبيه' : 'Notice',
+      text,
+      confirmButtonText: isArabic ? 'حسنًا' : 'OK',
+      customClass: {
+        container: 'premium-swal-container',
+        popup: 'premium-swal-popup',
+        icon: 'premium-swal-icon',
+        title: 'premium-swal-title',
+        htmlContainer: 'premium-swal-text',
+        confirmButton: 'premium-swal-confirm',
+      },
+      buttonsStyling: false,
+      showClass: {
+        popup: 'premium-swal-show',
+      },
+      hideClass: {
+        popup: 'premium-swal-hide',
+      },
+      backdrop: 'rgba(6, 10, 16, 0.76)',
+      background: '#0B0F16',
+      color: '#F8F9FC',
+      iconColor: type === 'success' ? '#F0CE96' : '#FFB4B4',
+      didOpen: () => {
+        const popup = Swal.getPopup()
+
+        if (popup) {
+          popup.setAttribute('dir', isArabic ? 'rtl' : 'ltr')
+        }
+      },
+    })
+  }
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (isSubmitting) {
+      return
+    }
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    const name = `${formData.get('name') ?? ''}`.trim()
+    const phone = `${formData.get('phone') ?? ''}`.trim()
+    const subject = `${formData.get('subject') ?? ''}`.trim()
+    const message = `${formData.get('message') ?? ''}`.trim()
+
+    if (!name || !phone || !subject || !message) {
+      showAlert('error', requiredMessage)
+      return
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch(messagesApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          phone_number: phone,
+          subject,
+          message,
+        }),
+      })
+
+      let responsePayload: unknown = null
+
+      try {
+        responsePayload = await response.json()
+      } catch {
+        responsePayload = null
+      }
+
+      const apiMessage = getApiMessage(responsePayload)
+
+      if (!response.ok) {
+        throw new Error(
+          apiMessage && matchesLanguageDirection(apiMessage, isArabic) ? apiMessage : errorMessage,
+        )
+      }
+
+      const displayedSuccessMessage =
+        apiMessage && matchesLanguageDirection(apiMessage, isArabic) ? apiMessage : successMessage
+
+      showAlert('success', displayedSuccessMessage)
+      form.reset()
+    } catch (error) {
+      const fallbackMessage = error instanceof Error && error.message.trim() ? error.message : errorMessage
+
+      showAlert('error', fallbackMessage)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
-    <form className={styles.form} onSubmit={(event) => event.preventDefault()} noValidate>
+    <form className={styles.form} onSubmit={handleSubmit} noValidate>
       <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
         {contactFormFields.map(({ id, name, type, placeholder, autoComplete, maxLength, inputMode, pattern }) => (
           <div key={id} className={name === 'subject' ? 'md:col-span-2' : ''}>
@@ -339,6 +485,7 @@ function ContactForm({
               maxLength={maxLength}
               inputMode={inputMode}
               pattern={pattern}
+              required
               className={fieldStyles}
             />
           </div>
@@ -353,14 +500,15 @@ function ContactForm({
             name="message"
             placeholder={messageLabel}
             maxLength={2500}
+            required
             className={messageStyles}
           />
         </div>
       </div>
 
-      <button type="submit" className={styles.submitButton}>
+      <button type="submit" className={`${styles.submitButton} disabled:cursor-not-allowed disabled:opacity-70`} disabled={isSubmitting}>
         <FaPaperPlane aria-hidden="true" />
-        {submitLabel}
+        {isSubmitting ? sendingLabel : submitLabel}
       </button>
     </form>
   )
@@ -434,6 +582,10 @@ function Section6() {
               contactFormFields={contactFormFields}
               messageLabel={copy.message}
               submitLabel={copy.submit}
+              sendingLabel={copy.sending}
+              successMessage={copy.success}
+              errorMessage={copy.error}
+              requiredMessage={copy.required}
               isArabic={isArabic}
             />
           </div>

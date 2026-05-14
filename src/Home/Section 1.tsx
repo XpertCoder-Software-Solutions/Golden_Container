@@ -37,6 +37,10 @@ type HeroCopy = {
   visualBadge: string
 }
 
+type Section1Props = {
+  onRequestQuote?: () => void
+}
+
 const sectionTitleGradient = 'bg-gradient-to-t from-[#FBEF9D] to-[#A96522] bg-clip-text text-transparent'
 const primaryButtonGradient = 'bg-gradient-to-l from-[#F2E89B] via-[#D39B52] to-[#A96522]'
 
@@ -87,7 +91,7 @@ const heroCopyByLanguage: Record<Language, HeroCopy> = {
   },
 }
 
-function Section1() {
+function Section1({ onRequestQuote }: Section1Props) {
   const { language, isArabic } = useLanguage()
   const copy = heroCopyByLanguage[language]
   const ArrowIcon = isArabic ? FiArrowLeft : FiArrowRight
@@ -143,13 +147,14 @@ function Section1() {
             </p>
 
             <div data-reveal="left" className="mt-6 flex flex-wrap items-center gap-3 reveal-delay-2 sm:gap-4">
-              <a
-                href="#contact-section"
+              <button
+                type="button"
+                onClick={onRequestQuote}
                 className={`inline-flex items-center gap-2 rounded-full ${primaryButtonGradient} px-5 py-2.5 text-[13px] font-semibold text-[#FFFDF4] shadow-[0_16px_28px_rgba(0,0,0,0.36),inset_0_1px_0_rgba(255,255,255,0.22)] transition-all duration-300 hover:brightness-110 sm:px-6 sm:py-3 sm:text-[14px]`}
               >
                 <span>{copy.primaryCtaLabel}</span>
                 <ArrowIcon className="text-base" />
-              </a>
+              </button>
 
               <a
                 href="#products-section"

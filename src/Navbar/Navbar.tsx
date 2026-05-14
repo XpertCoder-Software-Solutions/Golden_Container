@@ -11,6 +11,7 @@ type NavItem = {
 }
 
 type ContactButtonProps = {
+  href: string
   className: string
   label: string
   onClick?: () => void
@@ -113,13 +114,14 @@ const styles = {
 } as const
 
 function ContactButton({
+  href,
   className,
   label,
   onClick,
   iconClassName = 'text-sm lg:text-base xl:text-lg',
 }: ContactButtonProps) {
   return (
-    <a href={contactLink} onClick={onClick} className={className}>
+    <a href={href} onClick={onClick} className={className}>
       <LuPhoneCall className={iconClassName} />
       <span className="leading-none">{label}</span>
     </a>
@@ -136,11 +138,29 @@ function LanguageButton({ className, iconClassName, label, onClick, ariaLabel }:
 }
 
 function Navbar() {
+  const normalizedPathname = window.location.pathname.startsWith('/')
+    ? window.location.pathname
+    : `/${window.location.pathname}`
+  const pathnameWithoutLanguage = (() => {
+    const pathSegments = normalizedPathname.split('/').filter(Boolean)
+    if (pathSegments.length === 0) return '/'
+
+    const firstSegment = pathSegments[0]?.toLowerCase()
+    if (firstSegment !== 'en' && firstSegment !== 'ar') return normalizedPathname
+
+    const remainingSegments = pathSegments.slice(1)
+    if (remainingSegments.length === 0) return '/'
+    return `/${remainingSegments.join('/')}`
+  })()
+  const isHomePage = pathnameWithoutLanguage === '/'
+  const isProductsPage = pathnameWithoutLanguage === '/products'
+  const initialActiveHref: string | null = isProductsPage ? '#products-section' : '#home-section'
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [activeHref, setActiveHref] = useState<string | null>('#home-section')
+  const [activeHref, setActiveHref] = useState<string | null>(initialActiveHref)
   const isScrolledRef = useRef(false)
-  const activeHrefRef = useRef<string | null>('#home-section')
+  const activeHrefRef = useRef<string | null>(initialActiveHref)
   const { language, isArabic, toggleLanguage } = useLanguage()
   const mobileMenuId = 'main-navigation-mobile'
 
@@ -148,6 +168,9 @@ function Navbar() {
   const contactLabel = contactLabelByLanguage[language]
   const languageToggleLabel = isArabic ? 'EN' : 'AR'
   const languageToggleAriaLabel = isArabic ? 'التبديل إلى الإنجليزية' : 'Switch to Arabic'
+  const localizedHomePath = `/${language}`
+  const resolveNavHref = (href: string) => (isHomePage ? href : `${localizedHomePath}${href}`)
+  const resolvedContactHref = resolveNavHref(contactLink)
 
   useEffect(() => {
     activeHrefRef.current = activeHref
@@ -158,6 +181,15 @@ function Navbar() {
   }, [isScrolled])
 
   useEffect(() => {
+    if (isProductsPage) {
+      if (activeHrefRef.current !== '#products-section') {
+        activeHrefRef.current = '#products-section'
+        setActiveHref('#products-section')
+      }
+
+      return
+    }
+
     const sections = navItems
       .map(({ href }) => document.querySelector<HTMLElement>(href))
       .filter((section): section is HTMLElement => section !== null)
@@ -222,7 +254,7 @@ function Navbar() {
         window.cancelAnimationFrame(rafId)
       }
     }
-  }, [navItems])
+  }, [isProductsPage, navItems])
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false)
@@ -256,7 +288,7 @@ function Navbar() {
           <span className={`${styles.topGlow} ${isScrolled ? 'opacity-90' : 'opacity-0'}`} aria-hidden="true" />
           <span className={styles.sideGlow} aria-hidden="true" />
 
-          <a href="#home-section" className={styles.logoLink} onClick={() => handleNavItemClick('#home-section')}>
+          <a href={resolveNavHref('#home-section')} className={styles.logoLink} onClick={() => handleNavItemClick('#home-section')}>
             <img
               src={logo}
               alt="Golden Container"
@@ -269,7 +301,7 @@ function Navbar() {
           <ul className={styles.desktopLinks}>
             {navItems.map(({ label, href }) => (
               <li key={label}>
-                <a href={href} className={getDesktopLinkClassName(href)} onClick={() => handleNavItemClick(href)}>
+                <a href={resolveNavHref(href)} className={getDesktopLinkClassName(href)} onClick={() => handleNavItemClick(href)}>
                   {label}
                 </a>
               </li>
@@ -285,6 +317,7 @@ function Navbar() {
               ariaLabel={languageToggleAriaLabel}
             />
             <ContactButton
+              href={resolvedContactHref}
               className={styles.contactButton}
               iconClassName="text-sm lg:text-base xl:text-lg"
               label={contactLabel}
@@ -323,7 +356,7 @@ function Navbar() {
             {navItems.map(({ label, href }) => (
               <li key={label}>
                 <a
-                  href={href}
+                  href={resolveNavHref(href)}
                   onClick={() => handleNavItemClick(href)}
                   className={getMobileLinkClassName(href)}
                 >
@@ -335,6 +368,7 @@ function Navbar() {
 
           <div className="px-3 pb-4">
             <ContactButton
+              href={resolvedContactHref}
               className={styles.mobileContactButton}
               onClick={closeMobileMenu}
               iconClassName="text-base"

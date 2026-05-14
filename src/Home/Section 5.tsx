@@ -1,15 +1,27 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import africaMap from '../assets/Africa Map.webp'
 import asiaMap from '../assets/Asia Map.webp'
 import europeMap from '../assets/Europe Map.webp'
 import { useLanguage, type Language } from '../i18n/language'
 
+type ContinentId = 'africa' | 'asia' | 'europe'
+
 type ContinentCard = {
-  id: string
+  id: ContinentId
   name: string
   mapImage: string
-  countries: string[]
   mapImageClassName?: string
+}
+
+type CountryApiItem = {
+  id: number | string
+  name_ar: string
+  name_en: string
+  continent: string
+}
+
+type CountriesApiResponse = {
+  data?: unknown
 }
 
 const goldGradient = 'bg-gradient-to-l from-[#FBEF9D] to-[#A96522]'
@@ -17,6 +29,7 @@ const sectionTitleGradient = `bg-gradient-to-t from-[#FBEF9D] to-[#A96522] bg-cl
 const cardBorderGradient = 'bg-gradient-to-br from-[#FBEF9D] via-[#D39B52] to-[#A96522]'
 const cardBodyGradient = 'bg-[#07090D]'
 const cardFrontGradient = 'bg-gradient-to-br from-[#c18b44] via-[#75461E] to-[#5E3715]'
+const countriesApiUrl = `${((import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim() ?? '').replace(/\/$/, '')}/api/countries`
 
 const continentsByLanguage: Record<Language, ReadonlyArray<ContinentCard>> = {
   en: [
@@ -25,54 +38,18 @@ const continentsByLanguage: Record<Language, ReadonlyArray<ContinentCard>> = {
       name: 'Africa',
       mapImage: africaMap,
       mapImageClassName: 'max-w-[220px] sm:max-w-[235px]',
-      countries: [
-        'Egypt',
-        'Algeria',
-        'Morocco',
-        'Tunisia',
-        'Nigeria',
-        'South Africa',
-        'Kenya',
-        'Ethiopia',
-        'Ghana',
-        'Senegal',
-      ],
     },
     {
       id: 'asia',
       name: 'Asia',
       mapImage: asiaMap,
       mapImageClassName: 'max-w-[255px] sm:max-w-[270px]',
-      countries: [
-        'Saudi Arabia',
-        'United Arab Emirates',
-        'Qatar',
-        'Kuwait',
-        'China',
-        'India',
-        'Japan',
-        'South Korea',
-        'Indonesia',
-        'Malaysia',
-      ],
     },
     {
       id: 'europe',
       name: 'Europe',
       mapImage: europeMap,
       mapImageClassName: 'max-w-[245px] sm:max-w-[260px]',
-      countries: [
-        'Germany',
-        'France',
-        'Italy',
-        'Spain',
-        'Netherlands',
-        'Belgium',
-        'Sweden',
-        'Norway',
-        'Poland',
-        'Greece',
-      ],
     },
   ],
   ar: [
@@ -81,54 +58,18 @@ const continentsByLanguage: Record<Language, ReadonlyArray<ContinentCard>> = {
       name: 'أفريقيا',
       mapImage: africaMap,
       mapImageClassName: 'max-w-[220px] sm:max-w-[235px]',
-      countries: [
-        'مصر',
-        'الجزائر',
-        'المغرب',
-        'تونس',
-        'نيجيريا',
-        'جنوب أفريقيا',
-        'كينيا',
-        'إثيوبيا',
-        'غانا',
-        'السنغال',
-      ],
     },
     {
       id: 'asia',
       name: 'آسيا',
       mapImage: asiaMap,
       mapImageClassName: 'max-w-[255px] sm:max-w-[270px]',
-      countries: [
-        'السعودية',
-        'الإمارات',
-        'قطر',
-        'الكويت',
-        'الصين',
-        'الهند',
-        'اليابان',
-        'كوريا الجنوبية',
-        'إندونيسيا',
-        'ماليزيا',
-      ],
     },
     {
       id: 'europe',
       name: 'أوروبا',
       mapImage: europeMap,
       mapImageClassName: 'max-w-[245px] sm:max-w-[260px]',
-      countries: [
-        'ألمانيا',
-        'فرنسا',
-        'إيطاليا',
-        'إسبانيا',
-        'هولندا',
-        'بلجيكا',
-        'السويد',
-        'النرويج',
-        'بولندا',
-        'اليونان',
-      ],
     },
   ],
 }
@@ -140,6 +81,9 @@ const sectionCopyByLanguage: Record<Language, {
   tapToShowCountries: string
   cardAriaPrefix: string
   mapAltPrefix: string
+  loadingCountries: string
+  noCountriesInContinent: string
+  countriesLoadError: string
 }> = {
   en: {
     title: 'Our Markets Worldwide',
@@ -148,6 +92,9 @@ const sectionCopyByLanguage: Record<Language, {
     tapToShowCountries: 'Tap to show countries',
     cardAriaPrefix: 'Card for',
     mapAltPrefix: 'Map of',
+    loadingCountries: 'Loading countries...',
+    noCountriesInContinent: 'No countries available for this continent yet.',
+    countriesLoadError: 'Unable to load countries right now.',
   },
   ar: {
     title: 'أسواقنا حول العالم',
@@ -156,7 +103,81 @@ const sectionCopyByLanguage: Record<Language, {
     tapToShowCountries: 'اضغط لعرض الدول',
     cardAriaPrefix: 'بطاقة',
     mapAltPrefix: 'خريطة',
+    loadingCountries: 'جاري تحميل الدول...',
+    noCountriesInContinent: 'لا توجد دول مضافة لهذه القارة حتى الآن.',
+    countriesLoadError: 'تعذر تحميل الدول حاليًا.',
   },
+}
+
+const createEmptyCountriesByContinent = (): Record<ContinentId, string[]> => ({
+  africa: [],
+  asia: [],
+  europe: [],
+})
+
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === 'object' && value !== null
+}
+
+const normalizeContinent = (value: string) => {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[أإآ]/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/\s+/g, '')
+}
+
+const mapContinentToId = (continent: string): ContinentId | null => {
+  const normalizedContinent = normalizeContinent(continent)
+
+  if (normalizedContinent === 'افريقيا' || normalizedContinent === 'africa') {
+    return 'africa'
+  }
+
+  if (normalizedContinent === 'اسيا' || normalizedContinent === 'asia') {
+    return 'asia'
+  }
+
+  if (normalizedContinent === 'اوروبا' || normalizedContinent === 'europe') {
+    return 'europe'
+  }
+
+  return null
+}
+
+const toCountryApiItem = (value: unknown): CountryApiItem | null => {
+  if (!isRecord(value)) {
+    return null
+  }
+
+  const nameAr = typeof value.name_ar === 'string' ? value.name_ar.trim() : ''
+  const nameEn = typeof value.name_en === 'string' ? value.name_en.trim() : ''
+  const continent = typeof value.continent === 'string' ? value.continent.trim() : ''
+  const id = typeof value.id === 'number' || typeof value.id === 'string' ? value.id : `${nameEn}-${nameAr}-${continent}`
+
+  if (!nameAr || !nameEn || !continent) {
+    return null
+  }
+
+  return {
+    id,
+    name_ar: nameAr,
+    name_en: nameEn,
+    continent,
+  }
+}
+
+const parseCountriesFromResponse = (payload: unknown): CountryApiItem[] => {
+  let rawCountries: unknown[] = []
+
+  if (Array.isArray(payload)) {
+    rawCountries = payload
+  } else if (isRecord(payload) && Array.isArray((payload as CountriesApiResponse).data)) {
+    rawCountries = (payload as CountriesApiResponse).data as unknown[]
+  }
+
+  return rawCountries.map(toCountryApiItem).filter((country): country is CountryApiItem => country !== null)
 }
 
 type CountriesListProps = {
@@ -166,9 +187,9 @@ type CountriesListProps = {
 function CountriesList({ countries }: CountriesListProps) {
   return (
     <ul className="grid grid-cols-2 gap-2 text-[13px] text-[#ECECEC] sm:text-sm">
-      {countries.map((country) => (
+      {countries.map((country, index) => (
         <li
-          key={country}
+          key={`${country}-${index}`}
           className="rounded-[8px] border border-white/15 bg-white/[0.05] px-2 py-1.5 text-center leading-relaxed sm:px-2.5"
         >
           {country}
@@ -179,11 +200,17 @@ function CountriesList({ countries }: CountriesListProps) {
 }
 
 type ContinentCardItemProps = ContinentCard & {
+  countries: string[]
+  isLoadingCountries: boolean
+  countriesLoadError: boolean
   countriesInsideContinent: string
   hoverToShowCountries: string
   tapToShowCountries: string
   cardAriaPrefix: string
   mapAltPrefix: string
+  loadingCountries: string
+  noCountriesInContinent: string
+  countriesLoadErrorText: string
   revealDelayClass: string
 }
 
@@ -192,11 +219,16 @@ function ContinentCardItem({
   mapImage,
   countries,
   mapImageClassName,
+  isLoadingCountries,
+  countriesLoadError,
   countriesInsideContinent,
   hoverToShowCountries,
   tapToShowCountries,
   cardAriaPrefix,
   mapAltPrefix,
+  loadingCountries,
+  noCountriesInContinent,
+  countriesLoadErrorText,
   revealDelayClass,
 }: ContinentCardItemProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false)
@@ -226,7 +258,21 @@ function ContinentCardItem({
             <p className="mt-2 text-sm text-[#D5D5D5]">{countriesInsideContinent}</p>
           </div>
 
-          <CountriesList countries={countries} />
+          {isLoadingCountries ? (
+            <p className="rounded-[8px] border border-white/15 bg-white/[0.05] px-2.5 py-3 text-center text-sm text-[#ECECEC]">
+              {loadingCountries}
+            </p>
+          ) : countriesLoadError ? (
+            <p className="rounded-[8px] border border-[#D08080]/45 bg-[#2B1111] px-2.5 py-3 text-center text-sm text-[#FFCBCB]">
+              {countriesLoadErrorText}
+            </p>
+          ) : countries.length === 0 ? (
+            <p className="rounded-[8px] border border-white/15 bg-white/[0.05] px-2.5 py-3 text-center text-sm text-[#ECECEC]">
+              {noCountriesInContinent}
+            </p>
+          ) : (
+            <CountriesList countries={countries} />
+          )}
         </div>
 
         <div
@@ -263,8 +309,76 @@ function ContinentCardItem({
 
 function Section5() {
   const { language, isArabic } = useLanguage()
+  const [countries, setCountries] = useState<CountryApiItem[]>([])
+  const [isLoadingCountries, setIsLoadingCountries] = useState(true)
+  const [countriesLoadError, setCountriesLoadError] = useState(false)
   const continents = continentsByLanguage[language]
   const copy = sectionCopyByLanguage[language]
+
+  useEffect(() => {
+    let isCancelled = false
+    const abortController = new AbortController()
+
+    const loadCountries = async () => {
+      setIsLoadingCountries(true)
+      setCountriesLoadError(false)
+
+      try {
+        const response = await fetch(countriesApiUrl, { signal: abortController.signal })
+
+        if (!response.ok) {
+          throw new Error(`Failed to load countries: ${response.status}`)
+        }
+
+        const responsePayload = (await response.json()) as unknown
+        const parsedCountries = parseCountriesFromResponse(responsePayload)
+
+        if (isCancelled) {
+          return
+        }
+
+        setCountries(parsedCountries)
+      } catch {
+        if (abortController.signal.aborted || isCancelled) {
+          return
+        }
+
+        setCountries([])
+        setCountriesLoadError(true)
+      } finally {
+        if (!abortController.signal.aborted && !isCancelled) {
+          setIsLoadingCountries(false)
+        }
+      }
+    }
+
+    void loadCountries()
+
+    return () => {
+      isCancelled = true
+      abortController.abort()
+    }
+  }, [])
+
+  const countriesByContinent = useMemo<Record<ContinentId, string[]>>(() => {
+    const groupedCountries = createEmptyCountriesByContinent()
+
+    for (const country of countries) {
+      const continentId = mapContinentToId(country.continent)
+      if (!continentId) {
+        continue
+      }
+
+      const countryName = language === 'ar' ? country.name_ar : country.name_en
+      if (!countryName || groupedCountries[continentId].includes(countryName)) {
+        continue
+      }
+
+      groupedCountries[continentId].push(countryName)
+    }
+
+    return groupedCountries
+  }, [countries, language])
 
   return (
     <section id="markets-section" className="z-10 bg-[#07090D] py-9 sm:py-11 md:py-14 lg:py-16" dir={isArabic ? 'rtl' : 'ltr'}>
@@ -284,11 +398,17 @@ function Section5() {
             <ContinentCardItem
               key={continent.id}
               {...continent}
+              countries={countriesByContinent[continent.id]}
+              isLoadingCountries={isLoadingCountries}
+              countriesLoadError={countriesLoadError}
               countriesInsideContinent={copy.countriesInsideContinent}
               hoverToShowCountries={copy.hoverToShowCountries}
               tapToShowCountries={copy.tapToShowCountries}
               cardAriaPrefix={copy.cardAriaPrefix}
               mapAltPrefix={copy.mapAltPrefix}
+              loadingCountries={copy.loadingCountries}
+              noCountriesInContinent={copy.noCountriesInContinent}
+              countriesLoadErrorText={copy.countriesLoadError}
               revealDelayClass={index === 0 ? 'reveal-delay-1' : index === 1 ? 'reveal-delay-2' : 'reveal-delay-3'}
             />
           ))}

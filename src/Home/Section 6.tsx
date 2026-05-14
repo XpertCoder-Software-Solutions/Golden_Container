@@ -13,6 +13,7 @@ import { useState, type FormEvent } from 'react'
 import Swal from 'sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
 import { useLanguage, type Language } from '../i18n/language'
+import PhoneNumberInput from '../components/PhoneNumberInput'
 
 type ContactInfoItem = {
   id: string
@@ -366,6 +367,7 @@ function ContactForm({
   isArabic,
 }: ContactFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [phoneValue, setPhoneValue] = useState('')
   const fieldStyles = `${fieldBaseStyles} ${isArabic ? 'text-right' : 'text-left'}`
   const messageStyles = `${messageBaseStyles} ${isArabic ? 'text-right' : 'text-left'}`
   const showAlert = (type: AlertType, text: string) => {
@@ -413,7 +415,7 @@ function ContactForm({
     const form = event.currentTarget
     const formData = new FormData(form)
     const name = `${formData.get('name') ?? ''}`.trim()
-    const phone = `${formData.get('phone') ?? ''}`.trim()
+    const phone = phoneValue.trim()
     const subject = `${formData.get('subject') ?? ''}`.trim()
     const message = `${formData.get('message') ?? ''}`.trim()
 
@@ -459,6 +461,7 @@ function ContactForm({
 
       showAlert('success', displayedSuccessMessage)
       form.reset()
+      setPhoneValue('')
     } catch (error) {
       const fallbackMessage = error instanceof Error && error.message.trim() ? error.message : errorMessage
 
@@ -473,21 +476,40 @@ function ContactForm({
       <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
         {contactFormFields.map(({ id, name, type, placeholder, autoComplete, maxLength, inputMode, pattern }) => (
           <div key={id} className={name === 'subject' ? 'md:col-span-2' : ''}>
-            <label htmlFor={id} className="sr-only">
-              {placeholder}
-            </label>
-            <input
-              id={id}
-              name={name}
-              type={type}
-              placeholder={placeholder}
-              autoComplete={autoComplete}
-              maxLength={maxLength}
-              inputMode={inputMode}
-              pattern={pattern}
-              required
-              className={fieldStyles}
-            />
+            {name === 'phone' ? (
+              <PhoneNumberInput
+                id={id}
+                name="phone"
+                value={phoneValue}
+                onChange={setPhoneValue}
+                language={isArabic ? 'ar' : 'en'}
+                placeholder={placeholder}
+                required
+                disabled={isSubmitting}
+                autoComplete={autoComplete}
+                maxLength={maxLength}
+                containerClassName="h-[54px] sm:h-[58px]"
+                selectClassName="min-w-[108px] sm:min-w-[120px]"
+              />
+            ) : (
+              <>
+                <label htmlFor={id} className="sr-only">
+                  {placeholder}
+                </label>
+                <input
+                  id={id}
+                  name={name}
+                  type={type}
+                  placeholder={placeholder}
+                  autoComplete={autoComplete}
+                  maxLength={maxLength}
+                  inputMode={inputMode}
+                  pattern={pattern}
+                  required
+                  className={fieldStyles}
+                />
+              </>
+            )}
           </div>
         ))}
 

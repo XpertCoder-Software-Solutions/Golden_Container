@@ -69,15 +69,15 @@ const modalCopyByLanguage: Record<Language, {
     productLabel: 'Product',
     productPlaceholder: 'Select product',
     selectedProductLockedHint: 'Product is preselected from your chosen item.',
-    customerNameLabel: 'Customer Name',
+    customerNameLabel: 'Name',
     phoneLabel: 'Phone Number',
     emailLabel: 'Email',
-    quantityLabel: 'Quantity',
+    quantityLabel: 'Quantity (kg)',
     shippingCountryLabel: 'Shipping Country',
     shippingCountryPlaceholder: 'Select destination country',
     additionalNotesLabel: 'Additional Notes',
     additionalNotesPlaceholder: 'Any custom packing, specs, or shipment notes',
-    submit: 'Send Quote Request',
+    submit: 'Send Request',
     sending: 'Sending...',
     cancel: 'Cancel',
     requiredMessage: 'Please complete all required fields.',
@@ -95,15 +95,15 @@ const modalCopyByLanguage: Record<Language, {
     productLabel: 'المنتج',
     productPlaceholder: 'اختر المنتج',
     selectedProductLockedHint: 'تم اختيار المنتج من العنصر الذي ضغطت عليه.',
-    customerNameLabel: 'اسم العميل',
+    customerNameLabel: 'الاسم',
     phoneLabel: 'رقم الهاتف',
     emailLabel: 'البريد الإلكتروني',
-    quantityLabel: 'الكمية',
+    quantityLabel: 'الكمية (كجم)',
     shippingCountryLabel: 'الدولة المطلوبة للشحن',
     shippingCountryPlaceholder: 'اختر دولة الشحن',
     additionalNotesLabel: 'ملاحظات إضافية',
     additionalNotesPlaceholder: 'أي تفاصيل إضافية عن التعبئة أو المواصفات أو الشحن',
-    submit: 'إرسال طلب عرض السعر',
+    submit: 'إرسال الطلب',
     sending: 'جاري الإرسال...',
     cancel: 'إلغاء',
     requiredMessage: 'يرجى استكمال كل الحقول المطلوبة.',
@@ -549,7 +549,7 @@ function QuoteRequestModal({
 
   return (
     <div
-      className="fixed inset-0 z-[120] flex items-center justify-center bg-[#05070D]/80 px-4 py-6 backdrop-blur-[2px]"
+      className="fixed inset-0 z-[120] flex items-start justify-center overflow-y-auto bg-[#05070D]/80 px-4 py-4 backdrop-blur-[2px] sm:items-center sm:py-6"
       role="presentation"
       onClick={closeAndReset}
     >
@@ -558,7 +558,7 @@ function QuoteRequestModal({
         aria-modal="true"
         aria-label={copy.title}
         dir={isArabic ? 'rtl' : 'ltr'}
-        className="relative w-full max-w-[680px] overflow-hidden rounded-[22px] border border-[#D39B5299] bg-[linear-gradient(155deg,rgba(14,18,24,0.98),rgba(9,12,17,0.99))] p-5 text-[#F8F9FC] shadow-[0_30px_80px_rgba(0,0,0,0.55)] sm:p-6"
+        className="relative my-auto w-full max-w-[680px] overflow-hidden rounded-[22px] border border-[#D39B5299] bg-[linear-gradient(155deg,rgba(14,18,24,0.98),rgba(9,12,17,0.99))] text-[#F8F9FC] shadow-[0_30px_80px_rgba(0,0,0,0.55)] max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-3rem)]"
         onClick={(event) => event.stopPropagation()}
       >
         <button
@@ -570,141 +570,146 @@ function QuoteRequestModal({
           <FiX />
         </button>
 
-        <div className={`mb-5 ${isArabic ? 'text-right' : 'text-left'}`}>
-          <h3 className="text-[24px] font-extrabold leading-[1.2] text-[#F8F9FC] sm:text-[28px]">
-            {copy.title}
-          </h3>
-          <p className="mt-2 text-sm leading-7 text-[#D4DBE8]">{copy.subtitle}</p>
-        </div>
-
-        <form className="grid gap-3 sm:grid-cols-2 sm:gap-4" onSubmit={handleSubmit} noValidate>
-          <label className="flex flex-col gap-1.5 sm:col-span-2">
-            <span className="text-sm font-medium text-[#E6BF80]">{copy.productLabel}</span>
-            <select
-              value={selectedProductId}
-              onChange={(event) => setSelectedProductId(event.target.value)}
-              disabled={isProductSelectDisabled}
-              required
-              className={`h-[52px] rounded-[12px] border px-4 text-sm text-[#FFFFFF] focus:outline-none ${
-                isProductSelectDisabled
-                  ? 'cursor-not-allowed border-[#D39B5266] bg-[#111620] text-[#E7DFC9]'
-                  : 'border-white/15 bg-[#0A0D12] focus:border-[#D8A45C]'
-              }`}
-            >
-              <option value="">{copy.productPlaceholder}</option>
-              {selectableProducts.map((productOption) => (
-                <option key={productOption.id} value={productOption.id}>
-                  {productOption.title}
-                </option>
-              ))}
-            </select>
-            {isProductPreselected ? (
-              <p className="text-xs leading-5 text-[#DAB277]">{copy.selectedProductLockedHint}</p>
-            ) : null}
-          </label>
-
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-[#E6BF80]">{copy.customerNameLabel}</span>
-            <input
-              type="text"
-              value={customerName}
-              onChange={(event) => setCustomerName(event.target.value)}
-              autoComplete="name"
-              maxLength={120}
-              required
-              className="h-[52px] rounded-[12px] border border-white/15 bg-[#0A0D12] px-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] focus:border-[#D8A45C] focus:outline-none"
-            />
-          </label>
-
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-[#E6BF80]">{copy.phoneLabel}</span>
-            <PhoneNumberInput
-              id="quote-phone-number"
-              value={phoneNumber}
-              onChange={setPhoneNumber}
-              language={language}
-              placeholder={copy.phoneLabel}
-              autoComplete="tel"
-              maxLength={20}
-              required
-              disabled={isSubmitting}
-              containerClassName="h-[52px]"
-              selectClassName="min-w-[108px] sm:min-w-[120px]"
-            />
-          </label>
-
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-[#E6BF80]">{copy.emailLabel}</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              autoComplete="email"
-              maxLength={180}
-              required
-              className="h-[52px] rounded-[12px] border border-white/15 bg-[#0A0D12] px-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] focus:border-[#D8A45C] focus:outline-none"
-            />
-          </label>
-
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-[#E6BF80]">{copy.quantityLabel}</span>
-            <input
-              type="number"
-              value={quantity}
-              onChange={(event) => setQuantity(event.target.value)}
-              min={1}
-              step={1}
-              required
-              className="h-[52px] rounded-[12px] border border-white/15 bg-[#0A0D12] px-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] focus:border-[#D8A45C] focus:outline-none"
-            />
-          </label>
-
-          <label className="flex flex-col gap-1.5 sm:col-span-2">
-            <span className="text-sm font-medium text-[#E6BF80]">{copy.shippingCountryLabel}</span>
-            <select
-              value={shippingCountry}
-              onChange={(event) => setShippingCountry(event.target.value)}
-              required
-              className="h-[52px] rounded-[12px] border border-white/15 bg-[#0A0D12] px-4 text-sm text-[#FFFFFF] focus:border-[#D8A45C] focus:outline-none"
-            >
-              <option value="">{copy.shippingCountryPlaceholder}</option>
-              {countriesOptions.map((countryOption) => (
-                <option key={countryOption.code} value={countryOption.label}>
-                  {countryOption.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="flex flex-col gap-1.5 sm:col-span-2">
-            <span className="text-sm font-medium text-[#E6BF80]">{copy.additionalNotesLabel}</span>
-            <textarea
-              value={additionalNotes}
-              onChange={(event) => setAdditionalNotes(event.target.value)}
-              rows={3}
-              maxLength={600}
-              placeholder={copy.additionalNotesPlaceholder}
-              className="min-h-[108px] rounded-[12px] border border-white/15 bg-[#0A0D12] px-4 py-3 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] focus:border-[#D8A45C] focus:outline-none"
-            />
-          </label>
-
-          <div className="mt-2 flex flex-wrap items-center justify-end gap-2.5 sm:col-span-2">
-            <button
-              type="button"
-              onClick={closeAndReset}
-              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-[#F6F7F9] transition-all duration-200 hover:border-[#E7C58D] hover:text-[#FFE7BC]"
-            >
-              {copy.cancel}
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting || isLoadingProducts || productsLoadError || selectableProducts.length === 0}
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-l from-[#FBEF9D] via-[#D39B52] to-[#A96522] px-5 py-2.5 text-sm font-semibold text-[#FFFDF4] shadow-[0_12px_22px_rgba(0,0,0,0.32)] transition-all duration-200 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              {isSubmitting ? copy.sending : copy.submit}
-            </button>
+        <div className="max-h-[calc(100dvh-2rem)] overflow-y-auto p-5 sm:max-h-[calc(100dvh-3rem)] sm:p-6">
+          <div className={`mb-5 ${isArabic ? 'text-right' : 'text-left'}`}>
+            <h3 className="text-[24px] font-extrabold leading-[1.2] text-[#F8F9FC] sm:text-[28px]">
+              {copy.title}
+            </h3>
+            <p className="mt-2 text-sm leading-7 text-[#D4DBE8]">{copy.subtitle}</p>
           </div>
-        </form>
+
+          <form className="grid gap-3 sm:grid-cols-2 sm:gap-4" onSubmit={handleSubmit} noValidate>
+            <label className="flex flex-col gap-1.5 sm:col-span-2">
+              <span className="text-sm font-medium text-[#E6BF80]">{copy.productLabel}</span>
+              <select
+                value={selectedProductId}
+                onChange={(event) => setSelectedProductId(event.target.value)}
+                disabled={isProductSelectDisabled}
+                required
+                className={`h-[52px] rounded-[12px] border px-4 text-sm text-[#FFFFFF] focus:outline-none ${
+                  isProductSelectDisabled
+                    ? 'cursor-not-allowed border-[#D39B5266] bg-[#111620] text-[#E7DFC9]'
+                    : 'border-white/15 bg-[#0A0D12] focus:border-[#D8A45C]'
+                }`}
+              >
+                <option value="">{copy.productPlaceholder}</option>
+                {selectableProducts.map((productOption) => (
+                  <option key={productOption.id} value={productOption.id}>
+                    {productOption.title}
+                  </option>
+                ))}
+              </select>
+              {isProductPreselected ? (
+                <p className="text-xs leading-5 text-[#DAB277]">{copy.selectedProductLockedHint}</p>
+              ) : null}
+            </label>
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-sm font-medium text-[#E6BF80]">{copy.customerNameLabel}</span>
+              <input
+                type="text"
+                value={customerName}
+                onChange={(event) => setCustomerName(event.target.value)}
+                placeholder={copy.customerNameLabel}
+                autoComplete="name"
+                maxLength={120}
+                required
+                className="h-[52px] rounded-[12px] border border-white/15 bg-[#0A0D12] px-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] focus:border-[#D8A45C] focus:outline-none"
+              />
+            </label>
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-sm font-medium text-[#E6BF80]">{copy.phoneLabel}</span>
+              <PhoneNumberInput
+                id="quote-phone-number"
+                value={phoneNumber}
+                onChange={setPhoneNumber}
+                language={language}
+                placeholder={copy.phoneLabel}
+                autoComplete="tel"
+                maxLength={20}
+                required
+                disabled={isSubmitting}
+                containerClassName="h-[52px]"
+                selectClassName="min-w-[108px] sm:min-w-[120px]"
+              />
+            </label>
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-sm font-medium text-[#E6BF80]">{copy.emailLabel}</span>
+              <input
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder={copy.emailLabel}
+                autoComplete="email"
+                maxLength={180}
+                required
+                className="h-[52px] rounded-[12px] border border-white/15 bg-[#0A0D12] px-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] focus:border-[#D8A45C] focus:outline-none"
+              />
+            </label>
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-sm font-medium text-[#E6BF80]">{copy.quantityLabel}</span>
+              <input
+                type="number"
+                value={quantity}
+                onChange={(event) => setQuantity(event.target.value)}
+                placeholder={copy.quantityLabel}
+                min={1}
+                step={1}
+                required
+                className="h-[52px] rounded-[12px] border border-white/15 bg-[#0A0D12] px-4 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] focus:border-[#D8A45C] focus:outline-none"
+              />
+            </label>
+
+            <label className="flex flex-col gap-1.5 sm:col-span-2">
+              <span className="text-sm font-medium text-[#E6BF80]">{copy.shippingCountryLabel}</span>
+              <select
+                value={shippingCountry}
+                onChange={(event) => setShippingCountry(event.target.value)}
+                required
+                className="h-[52px] rounded-[12px] border border-white/15 bg-[#0A0D12] px-4 text-sm text-[#FFFFFF] focus:border-[#D8A45C] focus:outline-none"
+              >
+                <option value="">{copy.shippingCountryPlaceholder}</option>
+                {countriesOptions.map((countryOption) => (
+                  <option key={countryOption.code} value={countryOption.label}>
+                    {countryOption.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="flex flex-col gap-1.5 sm:col-span-2">
+              <span className="text-sm font-medium text-[#E6BF80]">{copy.additionalNotesLabel}</span>
+              <textarea
+                value={additionalNotes}
+                onChange={(event) => setAdditionalNotes(event.target.value)}
+                rows={3}
+                maxLength={600}
+                placeholder={copy.additionalNotesPlaceholder}
+                className="min-h-[108px] rounded-[12px] border border-white/15 bg-[#0A0D12] px-4 py-3 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] focus:border-[#D8A45C] focus:outline-none"
+              />
+            </label>
+
+            <div className="mt-2 flex flex-wrap items-center justify-end gap-2.5 sm:col-span-2">
+              <button
+                type="button"
+                onClick={closeAndReset}
+                className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-[#F6F7F9] transition-all duration-200 hover:border-[#E7C58D] hover:text-[#FFE7BC]"
+              >
+                {copy.cancel}
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting || isLoadingProducts || productsLoadError || selectableProducts.length === 0}
+                className="inline-flex items-center justify-center rounded-full bg-gradient-to-l from-[#FBEF9D] via-[#D39B52] to-[#A96522] px-5 py-2.5 text-sm font-semibold text-[#FFFDF4] shadow-[0_12px_22px_rgba(0,0,0,0.32)] transition-all duration-200 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {isSubmitting ? copy.sending : copy.submit}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   )

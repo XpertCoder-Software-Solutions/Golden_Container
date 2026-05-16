@@ -201,6 +201,18 @@ const parseProductsFromResponse = (payload: unknown): ProductApiItem[] => {
     .filter((product): product is ProductApiItem => product !== null)
 }
 
+const sizeHasWeightUnit = (size: string) => /(kg|kilogram|kilo|كجم|كيلو)/i.test(size)
+const sizeContainsDigits = (size: string) => /\d/.test(size)
+
+const formatSizeLabel = (size: string, language: Language) => {
+  const normalizedSize = size.trim()
+  if (!normalizedSize || !sizeContainsDigits(normalizedSize) || sizeHasWeightUnit(normalizedSize)) {
+    return normalizedSize
+  }
+
+  return language === 'ar' ? `${normalizedSize} كجم` : `${normalizedSize} KG`
+}
+
 const mapProductToCard = (product: ProductApiItem, language: Language): ProductCard => {
   const title = language === 'ar' ? product.name_ar : product.name_en
   const description = language === 'ar' ? product.description_ar : product.description_en
@@ -217,7 +229,7 @@ const mapProductToCard = (product: ProductApiItem, language: Language): ProductC
     description,
     image,
     category,
-    sizes: product.size,
+    sizes: product.size.map((size) => formatSizeLabel(size, language)),
     suitableFor,
     specs: specifications.map((specification, index) => ({
       id: `${product.id}-spec-${index + 1}`,

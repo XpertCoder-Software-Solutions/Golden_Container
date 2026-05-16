@@ -152,9 +152,7 @@ function PhoneNumberInput({
     <>
       <div
         dir="ltr"
-        className={`flex items-center overflow-hidden rounded-[12px] border border-white/15 bg-[#0A0D12] transition-all duration-200 focus-within:border-[#D8A45C] focus-within:ring-2 focus-within:ring-[#D8A45C]/20 ${
-          language === 'ar' ? 'flex-row-reverse' : 'flex-row'
-        } ${containerClassName ?? ''}`}
+        className={`flex flex-row items-center overflow-hidden rounded-[12px] border border-white/15 bg-[#0A0D12] transition-all duration-200 focus-within:border-[#D8A45C] focus-within:ring-2 focus-within:ring-[#D8A45C]/20 ${containerClassName ?? ''}`}
       >
         <label htmlFor={`${id}-country`} className="sr-only">
           {language === 'ar' ? 'كود الدولة المختصر' : 'Country short code'}
@@ -168,9 +166,7 @@ function PhoneNumberInput({
             updatePhoneValue(nextCountryIso2, localNumber)
           }}
           disabled={disabled}
-          className={`h-full shrink-0 border-white/15 bg-[#111620] px-2 text-xs text-[#F6F7F9] outline-none sm:px-2.5 sm:text-sm ${
-            language === 'ar' ? 'border-l' : 'border-r'
-          } ${disabled ? 'cursor-not-allowed opacity-70' : ''} ${selectClassName ?? ''}`}
+          className={`h-full shrink-0 border-r border-white/15 bg-[#111620] px-2 text-xs text-[#F6F7F9] outline-none sm:px-2.5 sm:text-sm ${disabled ? 'cursor-not-allowed opacity-70' : ''} ${selectClassName ?? ''}`}
           dir="ltr"
         >
           {countryDialOptions.map((option) => (
@@ -202,7 +198,9 @@ function PhoneNumberInput({
           maxLength={localNumberMaxLength}
           required={required}
           disabled={disabled}
-          className={`h-full w-full bg-transparent px-3 text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] outline-none sm:px-4 ${disabled ? 'cursor-not-allowed opacity-70' : ''} ${inputClassName ?? ''}`}
+          className={`h-full w-full bg-transparent px-3 text-left text-sm text-[#FFFFFF] placeholder:text-[#8F97A8] outline-none sm:px-4 ${
+            language === 'ar' ? 'placeholder-shown:text-right' : ''
+          } ${disabled ? 'cursor-not-allowed opacity-70' : ''} ${inputClassName ?? ''}`}
           dir="ltr"
         />
       </div>
